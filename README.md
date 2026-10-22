@@ -35,6 +35,8 @@ travel_buddy/      Travel chatbot, state, history, console entry point, README
 movie_finder/      Movie data, ingestion, retrieval, RAG, console entry point, README
 tests/             Offline regression tests using service doubles
 web_app.py         Optional Streamlit UI for both apps
+assets/            Shared visual styles and original SVG illustrations
+.streamlit/        Theme and lightweight runtime settings
 requirements.txt   Dependency constraints
 .env.example       Safe configuration template
 ```
@@ -54,3 +56,11 @@ These tests do not use API keys. Separate live OpenRouter and Pinecone checks, a
 The Pinecone SDK is constrained to version 7 to use its documented `Pinecone`, `ServerlessSpec`, `Index.fetch`, `upsert`, and `query` interfaces consistently. MiniLM embeddings run locally; Pinecone stores/searches them. OpenRouter receives travel conversation history and, in RAG mode, only the query and retrieved movie metadata. No travel conversation is saved to disk.
 
 References: [OpenRouter API](https://openrouter.ai/docs/api/reference/overview), [Pinecone Python SDK](https://github.com/pinecone-io/pinecone-python-client/tree/v7.3.0), [MiniLM model card](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2), [Streamlit](https://docs.streamlit.io/).
+
+## Interface design
+
+The optional interface uses a warm cream background, teal actions, muted nature/cinema illustrations, and a shared top navigation. TravelBuddy presents three choice cards per step, instant exact selections, back/reset controls, an optional conversation panel, and a downloadable itinerary. Movie Finder provides one-click examples, persistent results across page changes, an explicit on-demand RAG action, and a downloadable watchlist. Search failures retain the previous results; new successful searches clear the old recommendation so it cannot refer to different films.
+
+Similarity scores and implementation details live in a disclosure panel instead of competing with film descriptions. User/provider content is HTML-escaped before insertion into styled cards. Illustrations are original local SVGs with accessible descriptions. Fonts load from Google Fonts when available and fall back to local sans-serif fonts offline. Focus indicators and reduced-motion styles are included.
+
+Streamlit's source watcher is disabled to avoid scanning lazy transformer modules. After changing Python sources during development, restart the Streamlit process; normal app interactions work as usual.

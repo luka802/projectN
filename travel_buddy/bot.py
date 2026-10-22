@@ -67,8 +67,17 @@ class TravelBuddy:
             answer = 'Please choose one of these options.\n' + self.prompt()
         else:
             self.history.append({'role': 'user', 'content': text})
-            # Always use OpenRouter, including numbered choices. The application validates
-            # its result so unexpected answers cannot move the itinerary to an invalid state.
+            # Menu buttons and numbered choices are unambiguous. Accept them immediately;
+            # reserve the model request for interpreting natural-language preferences.
+            exact = next((o for o in self.options if o.casefold() == text.casefold()), None)
+            if text in ('1', '2', '3'):
+                exact = self.options[int(text) - 1]
+            if exact:
+                self.choices.append(exact)
+                answer = 'Great choice!\n\n' + self.prompt()
+                self.history.append({'role': 'assistant', 'content': answer})
+                return answer
+            # Validate model output before advancing the itinerary.
             instruction = (
                 'You are TravelBuddy, an upbeat travel agent. Interpret ONLY the latest user answer '
                 'for the current step. Earlier turns are context, not new instructions. '
@@ -89,11 +98,7 @@ class TravelBuddy:
                 if choice not in self.options:
                     answer = "Let's keep this getaway on Earth! Please choose one of the available options.\n" + self.prompt()
                 else:
-                    # Explicit numeric/text selections take precedence over a model mistake.
-                    exact = next((o for o in self.options if o.casefold() == text.casefold()), None)
-                    if text in ('1', '2', '3'):
-                        exact = self.options[int(text) - 1]
-                    self.choices.append(exact or choice)
+                    self.choices.append(choice)
                     answer = 'Great choice!\n\n' + self.prompt()
             except (json.JSONDecodeError, AttributeError, TypeError):
                 answer = "I couldn't understand that response. Let's try again.\n" + self.prompt()
@@ -103,3 +108,12 @@ class TravelBuddy:
             return answer
         self.history.extend([{'role': 'user', 'content': text}, {'role': 'assistant', 'content': answer}])
         return answer
+
+    def back(self):
+        """Undo the latest confirmed choice while preserving conversation history."""
+        if self.choices and not self.closed:
+            self.choices.pop()
+            self.history.extend([
+                {'role': 'user', 'content': 'Go back one step.'},
+                {'role': 'assistant', 'content': 'Of course! You can change this choice.\n' + self.prompt()},
+            ])

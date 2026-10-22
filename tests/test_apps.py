@@ -16,7 +16,7 @@ class TravelTests(unittest.TestCase):
     def test_trip_history_context_and_activity_constraints(self, llm):
         bot = TravelBuddy()
         bot.start()
-        llm.side_effect = [json.dumps({'choice': x}) for x in ['Mountains', 'Camping', 'Stargazing']]
+        llm.side_effect = [json.dumps({'choice': x}) for x in ['Camping', 'Stargazing']]
         bot.reply('2')
         bot.reply('camp outdoors')
         self.assertEqual(bot.options, ACTIVITIES['Mountains'])
@@ -39,7 +39,7 @@ class TravelTests(unittest.TestCase):
     @patch('travel_buddy.bot.chat', side_effect=ServiceError('Unavailable'))
     def test_api_failure_preserves_choices(self, llm):
         bot = TravelBuddy(choices=['Beach'])
-        self.assertIn('saved', bot.reply('1'))
+        self.assertIn('saved', bot.reply('a comfortable place to sleep'))
         self.assertEqual(bot.choices, ['Beach'])
 
     @patch('travel_buddy.bot.chat')
@@ -55,6 +55,18 @@ class TravelTests(unittest.TestCase):
         bot.reply('restart')
         self.assertEqual(bot.choices, [])
         self.assertIn('trip type', bot.reply(''))
+
+    @patch('travel_buddy.bot.chat')
+    def test_menu_choices_are_instant_and_back_keeps_context(self, llm):
+        bot = TravelBuddy()
+        bot.start()
+        bot.reply('2')
+        bot.reply('Camping')
+        bot.back()
+        self.assertEqual(bot.choices, ['Mountains'])
+        self.assertEqual(bot.options, ['Cozy guesthouse', 'Boutique hotel', 'Camping'])
+        self.assertIn('Go back one step.', str(bot.history))
+        llm.assert_not_called()
 
 
 class MemoryIndex:

@@ -4,11 +4,11 @@ Verified locally on Windows with Python 3.12 on October 22, 2026.
 
 ## Automated checks
 
-`python -m unittest discover -s tests -v`: **14 tests passed**.
+`python -m unittest discover -s tests -v`: **17 tests passed** after the interface update.
 
 Coverage includes travel state/history, unexpected and malformed answers, service failures, exit handling, unchanged/revised indexing, director filtering, threshold boundaries, Pinecone year normalization, RAG context, and OpenRouter fallback.
 
-Streamlit's `AppTest` verified that both screens render without exceptions, new-trip reset works, and an empty movie query displays validation.
+Streamlit's `AppTest` verifies the full guided travel flow, back/reset controls, itinerary download availability, one-click search suggestions, preserved results/recommendations across navigation, on-demand RAG without rerunning retrieval, recovery after search failure, and clearing outdated recommendations on new searches. A separate unit test confirms exact menu selections do not wait for an LLM request and back navigation preserves conversation context.
 
 ## Live Pinecone and MiniLM
 

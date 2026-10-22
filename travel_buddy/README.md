@@ -52,9 +52,9 @@ TravelBuddy: Goodbye! Safe travels and happy adventures!
 
 - A small explicit state machine controls valid options and the final itinerary. OpenRouter interprets natural language; its JSON selection is validated before advancing. This prevents invented activities or malformed LLM output from corrupting state.
 - The full in-memory user/assistant history is sent with each model request, alongside confirmed choices and the current step. History lasts for the current process/web session.
-- Numbered answers and exact labels are validated locally as well. Invalid or ambiguous responses repeat the current menu; missing credentials and service failures preserve all confirmed choices.
+- Numbered answers and exact labels are accepted locally for instant navigation. Natural-language preferences go through OpenRouter with the complete conversation context. Invalid or ambiguous responses repeat the current menu; service failures preserve all confirmed choices.
 - `exit` is handled before the API call, so users can always leave. `restart` starts a new itinerary in the same conversation; the UI's new-trip button creates a fresh conversation.
-- Friendly menu text is deterministic so that the three-option requirement stays reliable. Every attempted choice is interpreted through OpenRouter.
+- Friendly menu text is deterministic so that the three-option requirement stays reliable. The optional web UI adds back navigation, a readable itinerary, and a downloadable plan. Back navigation removes only the latest confirmed choice and records the change in conversation history.
 
 ## Live acceptance checklist
 

@@ -53,7 +53,7 @@ Use a namespace dedicated to this dataset/model (`movies-minilm-v1` by default).
 
 ## Optional RAG bonus
 
-`--rag` sends the query and retrieved, threshold-qualified metadata to OpenRouter, with instructions to recommend only those films and avoid inventing facts. Original search results remain visible even if the LLM request fails. The Streamlit movie page has the same feature behind a toggle.
+`--rag` sends the query and retrieved, threshold-qualified metadata to OpenRouter, with instructions to recommend only those films and avoid inventing facts. Original search results remain visible even if the LLM request fails. The Streamlit movie page offers the same feature through **Help me choose**, without repeating retrieval. Results and recommendations persist across page navigation. **Save these picks** downloads a text watchlist.
 
 ## Live acceptance checklist
 

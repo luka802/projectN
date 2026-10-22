@@ -91,7 +91,11 @@ class MovieFinder:
         self.index = index
         if encoder is None:
             from sentence_transformers import SentenceTransformer
-            encoder = SentenceTransformer(MODEL_NAME)
+            try:
+                # Reuse complete local weights without unnecessary Hub metadata calls.
+                encoder = SentenceTransformer(MODEL_NAME, local_files_only=True)
+            except OSError:
+                encoder = SentenceTransformer(MODEL_NAME)
         self.encoder = encoder
 
     def sync(self):
