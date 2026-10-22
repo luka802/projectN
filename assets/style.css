@@ -10,13 +10,12 @@ h1{font-size:3.6rem!important;line-height:1.08!important;font-weight:800!importa
 h2{font-size:2rem!important}h3{font-size:1.3rem!important}
 p{line-height:1.65}button,input,textarea{font-family:'DM Sans',sans-serif!important}
 button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #ba6b3c!important;outline-offset:3px!important}
-[data-testid="stButton"] button,[data-testid="stFormSubmitButton"] button{border-radius:12px;min-height:46px;font-weight:600;border-color:var(--line);transition:background .15s,border-color .15s,transform .15s}
+[data-testid="stButton"] button,[data-testid="stFormSubmitButton"] button{border-radius:12px;min-height:60px;font-weight:600;border-color:var(--line);transition:background .15s,border-color .15s,transform .15s}
 [data-testid="stButton"] button:hover{border-color:var(--teal);transform:translateY(-1px)}
 button[kind="primary"],button[kind="primaryFormSubmit"]{background:var(--teal)!important;border-color:var(--teal)!important;color:white!important}
 [data-testid="stTextInput"] input,[data-testid="stTextArea"] textarea{background:#fffdf8;border:1px solid var(--line);border-radius:10px;padding:12px!important}
 [data-testid="stForm"]{border:0;background:#eeeee5;border-radius:18px;padding:1.2rem}
 [data-testid="stVerticalBlockBorderWrapper"]>div{border-radius:18px!important}
-[data-testid="stVerticalBlockBorderWrapper"] [data-testid="stButton"] button{min-height:56px}
 [data-testid="stExpander"]{border-color:var(--line)!important;border-radius:14px!important}
 [data-testid="stRadio"]>div{gap:.5rem!important;flex-wrap:wrap}
 [data-testid="stRadio"] label{background:#efeee6;border:1px solid var(--line);border-radius:100px;padding:.55rem 1.1rem!important;margin:0!important}
