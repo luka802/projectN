@@ -28,7 +28,11 @@ class TravelBuddy:
     def options(self):
         if self.complete:
             return []
-        return [TRIPS, STAYS, ACTIVITIES.get(self.choices[0], [])][len(self.choices)] if self.choices else TRIPS
+        if not self.choices:
+            return TRIPS
+        if len(self.choices) == 1:
+            return STAYS
+        return ACTIVITIES[self.choices[0]]
 
     def prompt(self):
         if self.complete:
