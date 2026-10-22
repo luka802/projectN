@@ -1,0 +1,212 @@
+[
+  {
+    "title": "The Shawshank Redemption",
+    "director": "Frank Darabont",
+    "genre": "Drama",
+    "year": 1994,
+    "description": "Two prisoners develop a lasting friendship and find hope through kindness and perseverance."
+  },
+  {
+    "title": "The Intouchables",
+    "director": "Olivier Nakache and Eric Toledano",
+    "genre": "Comedy, Drama",
+    "year": 2011,
+    "description": "An unlikely friendship grows between a wealthy man with paralysis and his lively caregiver. A warm, uplifting story of connection."
+  },
+  {
+    "title": "Toy Story",
+    "director": "John Lasseter",
+    "genre": "Animation, Adventure, Comedy",
+    "year": 1995,
+    "description": "A cowboy toy and a space ranger learn to become friends while trying to return to their child owner."
+  },
+  {
+    "title": "Stand by Me",
+    "director": "Rob Reiner",
+    "genre": "Adventure, Drama",
+    "year": 1986,
+    "description": "Four childhood friends take a journey together and confront fear, grief, and growing up."
+  },
+  {
+    "title": "Paddington 2",
+    "director": "Paul King",
+    "genre": "Family, Comedy",
+    "year": 2017,
+    "description": "A kind bear tries to buy a gift for his aunt, bringing neighbors together through friendship and generosity."
+  },
+  {
+    "title": "The Grand Budapest Hotel",
+    "director": "Wes Anderson",
+    "genre": "Comedy, Adventure",
+    "year": 2014,
+    "description": "A hotel concierge and his young assistant become friends during a colorful mystery involving a stolen painting."
+  },
+  {
+    "title": "Inception",
+    "director": "Christopher Nolan",
+    "genre": "Science Fiction, Thriller",
+    "year": 2010,
+    "description": "A team enters dreams to plant an idea, exploring memory, grief, and layers of reality."
+  },
+  {
+    "title": "Interstellar",
+    "director": "Christopher Nolan",
+    "genre": "Science Fiction, Adventure, Drama",
+    "year": 2014,
+    "description": "Explorers travel through a wormhole in search of a future for humanity, driven by family bonds and sacrifice."
+  },
+  {
+    "title": "The Dark Knight",
+    "director": "Christopher Nolan",
+    "genre": "Action, Crime, Thriller",
+    "year": 2008,
+    "description": "Batman faces a chaotic criminal who tests the moral choices of Gotham City and its protectors."
+  },
+  {
+    "title": "Memento",
+    "director": "Christopher Nolan",
+    "genre": "Mystery, Thriller",
+    "year": 2000,
+    "description": "A man with short-term memory loss uses notes and tattoos to investigate the murder of his wife."
+  },
+  {
+    "title": "Dunkirk",
+    "director": "Christopher Nolan",
+    "genre": "War, History, Thriller",
+    "year": 2017,
+    "description": "Allied soldiers trapped on a beach struggle to escape by land, sea, and air during World War II."
+  },
+  {
+    "title": "The Conjuring",
+    "director": "James Wan",
+    "genre": "Horror, Supernatural",
+    "year": 2013,
+    "description": "Paranormal investigators help a family terrorized by a sinister presence in an isolated farmhouse. A scary haunted-house story."
+  },
+  {
+    "title": "Get Out",
+    "director": "Jordan Peele",
+    "genre": "Horror, Mystery, Thriller",
+    "year": 2017,
+    "description": "A young man visiting his girlfriend's family discovers a disturbing secret behind their welcoming behavior."
+  },
+  {
+    "title": "The Shining",
+    "director": "Stanley Kubrick",
+    "genre": "Horror, Psychological Thriller",
+    "year": 1980,
+    "description": "A winter caretaker becomes increasingly dangerous while his family is isolated in a haunted mountain hotel."
+  },
+  {
+    "title": "A Quiet Place",
+    "director": "John Krasinski",
+    "genre": "Horror, Science Fiction, Thriller",
+    "year": 2018,
+    "description": "A family survives in silence while terrifying creatures hunt by sound."
+  },
+  {
+    "title": "Alien",
+    "director": "Ridley Scott",
+    "genre": "Horror, Science Fiction",
+    "year": 1979,
+    "description": "A spaceship crew is stalked by a deadly extraterrestrial creature in the darkness of deep space."
+  },
+  {
+    "title": "Spirited Away",
+    "director": "Hayao Miyazaki",
+    "genre": "Animation, Fantasy, Adventure",
+    "year": 2001,
+    "description": "A girl trapped in a magical spirit world finds courage while trying to save her parents."
+  },
+  {
+    "title": "My Neighbor Totoro",
+    "director": "Hayao Miyazaki",
+    "genre": "Animation, Family, Fantasy",
+    "year": 1988,
+    "description": "Two sisters discover gentle forest spirits near their new countryside home. A comforting tale of childhood wonder."
+  },
+  {
+    "title": "The Lord of the Rings: The Fellowship of the Ring",
+    "director": "Peter Jackson",
+    "genre": "Fantasy, Adventure",
+    "year": 2001,
+    "description": "A group of companions begins a dangerous journey to destroy a powerful ring, united by loyalty and friendship."
+  },
+  {
+    "title": "The Matrix",
+    "director": "Lana Wachowski and Lilly Wachowski",
+    "genre": "Science Fiction, Action",
+    "year": 1999,
+    "description": "A computer hacker discovers that his reality is a simulation and joins a rebellion against its controllers."
+  },
+  {
+    "title": "Arrival",
+    "director": "Denis Villeneuve",
+    "genre": "Science Fiction, Drama",
+    "year": 2016,
+    "description": "A linguist works to communicate with alien visitors, exploring language, time, and human connection."
+  },
+  {
+    "title": "Blade Runner 2049",
+    "director": "Denis Villeneuve",
+    "genre": "Science Fiction, Mystery",
+    "year": 2017,
+    "description": "A futuristic detective uncovers a secret that challenges his understanding of identity and humanity."
+  },
+  {
+    "title": "La La Land",
+    "director": "Damien Chazelle",
+    "genre": "Musical, Romance, Drama",
+    "year": 2016,
+    "description": "An aspiring actress and a jazz musician fall in love while pursuing their dreams in Los Angeles."
+  },
+  {
+    "title": "Pride & Prejudice",
+    "director": "Joe Wright",
+    "genre": "Romance, Drama",
+    "year": 2005,
+    "description": "Elizabeth Bennet and Mr. Darcy navigate mistaken impressions, family expectations, and love in rural England."
+  },
+  {
+    "title": "The Martian",
+    "director": "Ridley Scott",
+    "genre": "Science Fiction, Adventure",
+    "year": 2015,
+    "description": "An astronaut stranded on Mars uses science, ingenuity, and humor to survive while others attempt a rescue."
+  },
+  {
+    "title": "Finding Nemo",
+    "director": "Andrew Stanton",
+    "genre": "Animation, Family, Adventure",
+    "year": 2003,
+    "description": "A cautious clownfish and a forgetful companion cross the ocean to rescue his missing son."
+  },
+  {
+    "title": "Parasite",
+    "director": "Bong Joon Ho",
+    "genre": "Thriller, Drama, Dark Comedy",
+    "year": 2019,
+    "description": "A struggling family becomes entangled with a wealthy household, exposing social inequality through escalating deception."
+  },
+  {
+    "title": "Knives Out",
+    "director": "Rian Johnson",
+    "genre": "Mystery, Comedy, Crime",
+    "year": 2019,
+    "description": "An eccentric detective investigates the death of a novelist amid conflicting stories from his family."
+  },
+  {
+    "title": "The Social Network",
+    "director": "David Fincher",
+    "genre": "Biography, Drama",
+    "year": 2010,
+    "description": "The creation of a social networking website strains friendships and leads to disputes over ambition and ownership."
+  },
+  {
+    "title": "Mad Max: Fury Road",
+    "director": "George Miller",
+    "genre": "Action, Adventure, Science Fiction",
+    "year": 2015,
+    "description": "Rebels flee a tyrant through a desert wasteland in a relentless chase for freedom."
+  }
+]
