@@ -21,10 +21,25 @@ class InterfaceTests(unittest.TestCase):
     def setUp(self):
         st.cache_resource.clear()
 
+    @patch('movie_finder.search.MovieFinder')
+    def test_featured_home_and_saved_navigation_need_no_search(self, factory):
+        app = AppTest.from_file(APP).run()
+        self.assertEqual(app.radio[0].value, 'Find a film')
+        self.assertFalse(app.exception)
+        factory.assert_not_called()
+        click(app, 'Save Interstellar for later +')
+        app.radio[0].set_value('Saved films').run()
+        self.assertFalse(app.exception)
+        self.assertEqual(len(app.session_state.saved_movies), 1)
+        click(app, 'Remove Interstellar')
+        self.assertEqual(len(app.session_state.saved_movies), 0)
+        factory.assert_not_called()
+
     @patch('travel_buddy.bot.chat')
     def test_guided_travel_back_and_completed_plan(self, llm):
         llm.side_effect = [json.dumps({'choice': x}) for x in ['Mountains', 'Beach', 'Camping', 'Snorkeling']]
         app = AppTest.from_file(APP).run()
+        app.radio[0].set_value('Plan a getaway').run()
         self.assertFalse(app.exception)
         click(app, 'Choose Mountains')
         self.assertEqual(app.session_state.travel.choices, ['Mountains'])

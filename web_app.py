@@ -3,12 +3,12 @@ from html import escape
 from pathlib import Path
 import streamlit as st
 from common.llm import ServiceError
-from movie_finder.search import MovieFinder, movie_id
+from movie_finder.search import MovieFinder, movie_id, load_movies
 from travel_buddy.bot import TravelBuddy
-from ui_helpers import toggle_saved, watchlist_text
+from ui_helpers import toggle_saved, watchlist_text, poster_style
 
 ASSETS = Path(__file__).with_name('assets')
-st.set_page_config(page_title='Weekend & Watchlist', page_icon='✦', layout='centered')
+st.set_page_config(page_title='Weekend & Watchlist', page_icon='✦', layout='wide')
 st.markdown(f'<style>{(ASSETS / "style.css").read_text(encoding="utf-8")}</style>', unsafe_allow_html=True)
 CHOICE_DETAILS = {
     'Beach': ('☀', 'Salt air, slow mornings, and a little sunshine.', '#f3e3bc'),
@@ -57,22 +57,23 @@ def queue_query(query):
     st.session_state.queued_query = query
 
 def render_movie(movie, rank):
-    palettes = [('#d9e5d4', '#285b50'), ('#edddc4', '#8f5c35'), ('#dedee9', '#545875')]
-    background, ink = palettes[(rank - 1) % len(palettes)]
     title = escape(movie['title'])
-    html(f'''<article class="movie-card">
-      <div class="movie-cover" aria-hidden="true" style="--cover:{background};--cover-ink:{ink}"><span>{rank:02}</span></div>
-      <div><div class="movie-topline">Your {'closest match' if rank == 1 else 'next pick'} · {int(movie['year'])}</div>
-      <h3 class="movie-title">{title}</h3>
-      <div class="movie-meta">Directed by {escape(movie['director'])}</div>
-      <p class="movie-description">{escape(movie['description'])}</p>
-      <span class="movie-genre">{escape(movie['genre'])}</span></div>
-    </article>''')
+    style = poster_style(movie)
+    html(f'<article class="movie-card"><div class="poster" role="img" aria-label="Original cinematic artwork for {title}" style="{style}"><div class="poster-title">{title}</div></div>'
+         f'<div class="movie-info"><h3 class="movie-title">{title} <span>({int(movie["year"])})</span></h3>'
+         f'<div class="movie-meta">{escape(movie["director"])}</div>'
+         f'<p class="movie-description">{escape(movie["description"])}</p>'
+         f'<div class="movie-genre">{escape(movie["genre"])}</div></div></article>')
 
-html('<div class="brand"><div class="brand-name"><span class="brand-mark" aria-hidden="true">✦</span> Weekend &amp; Watchlist</div><div class="brand-note">Make room for a good time</div></div>')
+brand_col, nav_col = st.columns([1.2, 2.4], vertical_alignment='center')
+with brand_col:
+    html('<div class="brand"><span>Weekend &amp; <b>Watchlist</b></span></div>')
+with nav_col:
+    page = st.radio('Choose your experience', ['Plan a getaway', 'Find a film', 'Saved films'], index=1,
+                    horizontal=True, label_visibility='collapsed', key='experience')
+html('<div class="nav-rule"></div>')
 if 'saved_movies' not in st.session_state:
     st.session_state.saved_movies = {}
-page = st.radio('Choose your experience', ['Plan a getaway', 'Find a film'], horizontal=True, label_visibility='collapsed', key='experience')
 
 if page == 'Plan a getaway':
     if 'travel' not in st.session_state:
@@ -143,16 +144,28 @@ if page == 'Plan a getaway':
         for message in bot.history:
             with st.chat_message(message['role']):
                 st.markdown(message['content'])
+elif page == 'Saved films':
+    html('<div class="saved-heading"><div class="eyebrow">YOUR PERSONAL SCREENING LIST</div><h1>Worth saving.<br>Worth <em>watching.</em></h1></div>')
+    saved = st.session_state.saved_movies
+    if not saved:
+        html('<div class="empty-state"><h3>Your next great film is out there.</h3><p>Find a film, then save the ones that catch your eye. They will stay here during this session.</p></div>')
+    else:
+        columns = st.columns(3, gap='medium')
+        for rank, (identifier, movie) in enumerate(list(saved.items()), 1):
+            with columns[(rank - 1) % 3]:
+                render_movie(movie, rank)
+                st.button(f'Remove {movie["title"]}', key=f'library-remove-{identifier}', on_click=toggle_saved, args=(saved, movie), use_container_width=True)
+        st.download_button('Download saved films ↓', data=watchlist_text(saved.values()), file_name='saved-films.txt', mime='text/plain')
+        st.caption('Saved for this session. Download your list to keep it after closing the app.')
 else:
-    hero('cinema', 'Something worth watching', 'Less scrolling.\nMore cinema.',
-         'A mood, a favorite director, a story you need right now. Tell us what sounds good; we’ll find a few films to match.',
-         ['30 handpicked films', 'Search in your own words', 'A little help choosing'], compact='movie_results' in st.session_state)
+    html('<section class="cinema-hero"><h1>Your next<br>great <em>film.</em></h1><p>Thoughtful recommendations for your next movie night.</p></section>')
     if 'movie_input' not in st.session_state:
         st.session_state.movie_input = st.session_state.get('last_movie_query', '')
     with st.form('movie-query'):
-        query = st.text_input('What are you in the mood for?', placeholder='A feel-good movie about friendship', key='movie_input', max_chars=1000)
-        submitted = st.form_submit_button('Find my next film →', type='primary', use_container_width=True)
-    st.caption('A few ideas to get you started')
+        search_col, submit_col = st.columns([5, 1.4], vertical_alignment='bottom')
+        query = search_col.text_input('What are you in the mood for?', placeholder='Movies by Christopher Nolan', key='movie_input', max_chars=1000, label_visibility='collapsed')
+        with submit_col:
+            submitted = st.form_submit_button('Find films →', type='primary', use_container_width=True)
     suggestions = st.columns(3)
     examples = [('A little suspense', 'something scary to watch tonight'), ('A Nolan night', 'movies by Christopher Nolan'), ('Something feel-good', 'a feel-good movie about friendship')]
     for column, (label, example) in zip(suggestions, examples):
@@ -204,12 +217,14 @@ else:
         else:
             html(f'<div class="results-heading"><strong>Your next watch</strong><span>{len(movies)} film{"s" if len(movies) != 1 else ""} to explore</span></div>')
             st.caption(f'Picked for “{last_query}”')
+            columns = st.columns(3, gap='medium')
             for rank, movie in enumerate(movies, 1):
-                render_movie(movie, rank)
-                identifier = movie_id(movie)
-                is_saved = identifier in saved
-                st.button('Saved ✓ · remove' if is_saved else f'Save {movie["title"]} for later +',
-                          key=f'save-{identifier}', on_click=toggle_saved, args=(saved, movie))
+                with columns[rank - 1]:
+                    render_movie(movie, rank)
+                    identifier = movie_id(movie)
+                    is_saved = identifier in saved
+                    st.button('Saved ✓ · remove' if is_saved else f'Save {movie["title"]} for later +',
+                              key=f'save-{identifier}', on_click=toggle_saved, args=(saved, movie), use_container_width=True)
             if st.button('Help me choose ✦', type='primary', use_container_width=True):
                 try:
                     with st.spinner('Putting together a personal recommendation...'):
@@ -227,5 +242,14 @@ else:
                     st.caption(f'{movie["title"]} · cosine similarity {movie["score"]:.3f}')
                 st.caption('Matching threshold: 0.30. AI recommendations use only your retrieved picks. The collection currently contains 30 films.')
     else:
-        html('<div class="empty-state"><h3>The right film starts with a feeling.</h3><p>From comforting friendships to edge-of-your-seat stories, tell us what you’re after. Your picks will appear here.</p></div>')
-html('<div class="footer"><span>Weekend &amp; Watchlist · Good plans, good stories.</span><span>A small collection. A world of possibilities.</span></div>')
+        featured = {movie['title']: movie for movie in load_movies()}
+        st.caption('FROM THE COLLECTION · Search above for your own matches')
+        columns = st.columns(3, gap='medium')
+        for rank, title in enumerate(['Interstellar', 'Inception', 'Memento'], 1):
+            movie = featured[title]
+            with columns[rank - 1]:
+                render_movie(movie, rank)
+                identifier = movie_id(movie)
+                st.button('Saved ✓ · remove' if identifier in saved else f'Save {title} for later +',
+                          key=f'featured-{identifier}', on_click=toggle_saved, args=(saved, movie), use_container_width=True)
+html('<div class="footer"><span>Weekend &amp; Watchlist · Your next great story.</span><span>A small collection. A world of possibilities.</span></div>')
