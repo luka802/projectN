@@ -1,5 +1,7 @@
 # Weekend & Watchlist
 
+[![Windows and Linux checks](https://github.com/luka802/projectN/actions/workflows/checks.yml/badge.svg)](https://github.com/luka802/projectN/actions/workflows/checks.yml)
+
 Two Python console assignments with both optional bonuses: grounded LLM movie recommendations (RAG) and a Streamlit interface for both apps.
 
 ## Quick start
@@ -68,6 +70,8 @@ Similarity scores and implementation details live in a disclosure panel instead 
 Streamlit's source watcher is disabled to avoid scanning lazy transformer modules. After changing Python sources during development, restart the Streamlit process; normal app interactions work as usual.
 
 Individual film picks can be saved across searches in **Saved for later**, removed, and downloaded as one shortlist. Saved films and trip choices belong to the current browser session; download them before closing it. Completed trips support direct editing of any step, with later dependent choices cleared automatically.
+
+After the first choice or a completed search, the introductory illustration becomes a compact header so the current task stays near the top. The first movie search explains that opening the collection takes longer than subsequent searches.
 
 Repeated identical movie searches are cached for up to five minutes (32 entries maximum). Cached results are copied, respect the configured threshold, and clear when ingestion updates the collection. [RESEARCH.md](RESEARCH.md) records comparable-product research and measured backend timings.
 

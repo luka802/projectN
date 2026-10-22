@@ -31,7 +31,12 @@ CHOICE_DETAILS = {
 def html(content):
     st.markdown(content, unsafe_allow_html=True)
 
-def hero(kind, eyebrow, title, description, facts):
+def hero(kind, eyebrow, title, description, facts, *, compact=False):
+    if compact:
+        svg = (ASSETS / f'{kind}.svg').read_text(encoding='utf-8')
+        html(f'<div class="compact-hero"><div><div class="eyebrow">{eyebrow}</div>'
+             f'<h1>{escape(title).replace(chr(10), " ")}</h1></div><div class="compact-art">{svg}</div></div>')
+        return
     left, right = st.columns([1.15, 1], gap='large', vertical_alignment='center')
     with left:
         html(f'<div class="eyebrow">{eyebrow}</div>')
@@ -70,13 +75,13 @@ if 'saved_movies' not in st.session_state:
 page = st.radio('Choose your experience', ['Plan a getaway', 'Find a film'], horizontal=True, label_visibility='collapsed', key='experience')
 
 if page == 'Plan a getaway':
-    hero('travel', 'A change of scenery', 'Small escape.\nBig reset.',
-         'Some weekends deserve a different view. Find your kind of getaway, one simple choice at a time.',
-         ['3 simple steps', 'Made for your mood', 'No bookings needed'])
     if 'travel' not in st.session_state:
         st.session_state.travel = TravelBuddy()
         st.session_state.travel.start()
     bot = st.session_state.travel
+    hero('travel', 'A change of scenery', 'Small escape.\nBig reset.',
+         'Some weekends deserve a different view. Find your kind of getaway, one simple choice at a time.',
+         ['3 simple steps', 'Made for your mood', 'No bookings needed'], compact=bool(bot.choices) or bot.closed)
     stage = len(bot.choices)
     labels = ['The setting', 'Your stay', 'The experience']
     html('<div class="steps">' + ''.join(
@@ -141,7 +146,7 @@ if page == 'Plan a getaway':
 else:
     hero('cinema', 'Something worth watching', 'Less scrolling.\nMore cinema.',
          'A mood, a favorite director, a story you need right now. Tell us what sounds good; we’ll find a few films to match.',
-         ['30 handpicked films', 'Search in your own words', 'A little help choosing'])
+         ['30 handpicked films', 'Search in your own words', 'A little help choosing'], compact='movie_results' in st.session_state)
     if 'movie_input' not in st.session_state:
         st.session_state.movie_input = st.session_state.get('last_movie_query', '')
     with st.form('movie-query'):
@@ -164,12 +169,18 @@ else:
             st.info('Enjoy your next movie. Come back whenever you need another idea.')
         else:
             try:
+                startup_note = st.empty()
+                if not st.session_state.get('collection_opened'):
+                    startup_note.info('The first search opens the collection. Your next searches will be quicker.')
                 with st.spinner('Finding a few good stories...'):
                     finder = get_finder()
                     movies = finder.search(requested)
                 st.session_state.movie_results = movies
                 st.session_state.last_movie_query = requested
+                st.session_state.collection_opened = True
                 st.session_state.pop('movie_recommendation', None)
+                startup_note.empty()
+                st.rerun()
             except Exception:
                 st.error('The movie collection is taking a little longer to connect. Please try again in a moment. Your previous picks are still here.')
     saved = st.session_state.saved_movies
