@@ -1,0 +1,8 @@
+{
+  "startup_seconds": 12.1328,
+  "first_query_seconds": 0.83862,
+  "cached_query_seconds": 1.9e-05,
+  "exact_travel_choice_seconds": 1.7e-05,
+  "natural_language_seconds": 3.8442,
+  "natural_language_completed_step": true
+}

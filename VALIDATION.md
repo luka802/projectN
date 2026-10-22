@@ -4,7 +4,7 @@ Verified locally on Windows with Python 3.12 on October 22, 2026.
 
 ## Automated checks
 
-`python -m unittest discover -s tests -v`: **17 tests passed** after the interface update.
+`python -m unittest discover -s tests -v`: **25 tests passed** after the research and performance update.
 
 Coverage includes travel state/history, unexpected and malformed answers, service failures, exit handling, unchanged/revised indexing, director filtering, threshold boundaries, Pinecone year normalization, RAG context, and OpenRouter fallback.
 
@@ -33,3 +33,14 @@ Explicit director filtering kept every Nolan result attributed to Christopher No
 - `exit` returned a goodbye and closed the conversation.
 
 Live outputs can vary with model availability, provider limits, and stochastic LLM behavior. These are observed checks, not a guarantee of every possible query. Credentials and local configuration are excluded from Git.
+
+## Research and performance follow-up
+
+- Saved-film selection, removal, copying, export, and navigation persistence are covered by provider-free tests.
+- Direct itinerary editing clears later choices; changing Mountains to Beach cannot leave a mountain activity selected.
+- Repeated queries skip embedding and Pinecone work, return independent copies, expire after five minutes, and honor threshold changes.
+- A live unknown-director query (Steven Spielberg, absent from the collection) returned no matches; the surname query "movies by nolan" returned only Nolan films.
+- A later live natural-language trip preference completed correctly in 3.84 seconds. The model response budget was retained after an attempted reduction proved unreliable in a separate check.
+- Both local font URLs returned HTTP 200 with valid font bytes. Core text/button contrast pairs ranged from 4.61:1 to 11.27:1.
+- Ctrl+C during model/search calls returns a clean goodbye in the console regression checks.
+- [RESEARCH.md](RESEARCH.md) and `performance.json` record methods and backend timings.

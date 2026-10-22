@@ -36,7 +36,9 @@ movie_finder/      Movie data, ingestion, retrieval, RAG, console entry point, R
 tests/             Offline regression tests using service doubles
 web_app.py         Optional Streamlit UI for both apps
 assets/            Shared visual styles and original SVG illustrations
+static/fonts/      Locally served fonts and open licenses
 .streamlit/        Theme and lightweight runtime settings
+.github/workflows/ Windows and Linux offline regression checks
 requirements.txt   Dependency constraints
 .env.example       Safe configuration template
 ```
@@ -61,6 +63,12 @@ References: [OpenRouter API](https://openrouter.ai/docs/api/reference/overview),
 
 The optional interface uses a warm cream background, teal actions, muted nature/cinema illustrations, and a shared top navigation. TravelBuddy presents three choice cards per step, instant exact selections, back/reset controls, an optional conversation panel, and a downloadable itinerary. Movie Finder provides one-click examples, persistent results across page changes, an explicit on-demand RAG action, and a downloadable watchlist. Search failures retain the previous results; new successful searches clear the old recommendation so it cannot refer to different films.
 
-Similarity scores and implementation details live in a disclosure panel instead of competing with film descriptions. User/provider content is HTML-escaped before insertion into styled cards. Illustrations are original local SVGs with accessible descriptions. Fonts load from Google Fonts when available and fall back to local sans-serif fonts offline. Focus indicators and reduced-motion styles are included.
+Similarity scores and implementation details live in a disclosure panel instead of competing with film descriptions. User/provider content is HTML-escaped before insertion into styled cards. Illustrations are original local SVGs with accessible descriptions. Fonts and their licenses are bundled locally, with no external font request required. Focus indicators and reduced-motion styles are included. Main text/button colour pairs were checked at a minimum 4.5:1 contrast ratio.
 
 Streamlit's source watcher is disabled to avoid scanning lazy transformer modules. After changing Python sources during development, restart the Streamlit process; normal app interactions work as usual.
+
+Individual film picks can be saved across searches in **Saved for later**, removed, and downloaded as one shortlist. Saved films and trip choices belong to the current browser session; download them before closing it. Completed trips support direct editing of any step, with later dependent choices cleared automatically.
+
+Repeated identical movie searches are cached for up to five minutes (32 entries maximum). Cached results are copied, respect the configured threshold, and clear when ingestion updates the collection. [RESEARCH.md](RESEARCH.md) records comparable-product research and measured backend timings.
+
+GitHub Actions runs the offline tests on Windows and Linux with Python 3.12. It uses `requirements-test.txt`, which omits large model dependencies because tests inject fake providers. Live checks still require the full requirements and configured accounts.

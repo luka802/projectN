@@ -1,0 +1,5 @@
+# Offline provider doubles avoid downloading PyTorch/model weights in CI.
+requests>=2.32,<3
+python-dotenv>=1.0,<2
+numpy>=1.26,<3
+streamlit>=1.40,<2

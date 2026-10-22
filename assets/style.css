@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@font-face{font-family:'DM Sans';src:url('app/static/fonts/DMSans.ttf') format('truetype');font-style:normal;font-weight:100 1000;font-display:swap}
+@font-face{font-family:'Manrope';src:url('app/static/fonts/Manrope.ttf') format('truetype');font-style:normal;font-weight:200 800;font-display:swap}
 :root{--ink:#203a38;--muted:#64736d;--teal:#176b60;--paper:#f8f6f0;--line:#dedfd5;--rust:#a34d32}
 html,body,[class*="css"],.stApp{font-family:'DM Sans',sans-serif}
 .stApp{background:var(--paper)}

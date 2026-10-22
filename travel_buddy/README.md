@@ -29,7 +29,7 @@ Let's choose your accommodation!
 2. Boutique hotel
 3. Camping
 You: I want to stay on the Moon
-TravelBuddy: Let's keep this getaway on Earth! Please choose one of the available options.
+TravelBuddy: No worries! Please choose one of the options below, or describe it another way.
 [The same accommodation menu is shown.]
 You: 1
 TravelBuddy: Great choice!
