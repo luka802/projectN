@@ -3,9 +3,8 @@
 This diagnostic uses the same metadata and cosine metric as the application.
 It does not replace live Pinecone testing or provide a production fallback.
 """
+from movie_finder.search import MODEL_NAME, director_filter, load_movies, movie_text
 from sentence_transformers import SentenceTransformer
-
-from movie_finder.search import MODEL_NAME, load_movies, movie_text
 
 
 def main():
@@ -23,6 +22,13 @@ def main():
     for query in queries:
         vector = model.encode(query, normalize_embeddings=True)
         scores = embeddings @ vector
+        constraint = director_filter(query, movies)
+        if constraint:
+            director = constraint['director']['$eq']
+            scores = scores.copy()
+            for i, movie in enumerate(movies):
+                if movie['director'] != director:
+                    scores[i] = -1
         top = scores.argsort()[::-1][:3]
         print('\n' + query)
         for i in top:

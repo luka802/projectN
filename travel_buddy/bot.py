@@ -38,7 +38,7 @@ class TravelBuddy:
         if self.complete:
             return self.summary()
         menu = '\n'.join(f'{i}. {option}' for i, option in enumerate(self.options, 1))
-        return f"Let's choose your {STEPS[len(self.choices)]}!\n{menu}\nChoose a number or describe your preference. Type exit to leave."
+        return f"Let's choose your {STEPS[len(self.choices)]}!\n\n{menu}\n\nChoose a number or describe your preference. Type exit to leave."
 
     def start(self):
         greeting = "Hi, I'm TravelBuddy! Let's plan an amazing weekend getaway.\n\n" + self.prompt()

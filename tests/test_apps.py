@@ -112,6 +112,12 @@ class MovieTests(unittest.TestCase):
         self.assertTrue(self.index.last_query['include_metadata'])
         self.assertEqual(len(self.index.last_query['vector']), 384)
 
+    def test_explicit_director_uses_metadata_filter(self):
+        self.finder.search('movies by Christopher Nolan')
+        self.assertEqual(self.index.last_query['filter'], {'director': {'$eq': 'Christopher Nolan'}})
+        self.finder.search('a movie about friendship')
+        self.assertNotIn('filter', self.index.last_query)
+
     @patch('movie_finder.search.chat')
     def test_no_match_skips_llm(self, llm):
         self.assertEqual(self.finder.search(''), [])

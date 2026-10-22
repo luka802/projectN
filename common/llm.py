@@ -5,7 +5,9 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
-load_dotenv(Path(__file__).resolve().parents[1] / '.env')
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(PROJECT_ROOT / '.env')
+os.environ.setdefault('HF_HOME', str(PROJECT_ROOT / '.model-cache'))
 
 
 class ServiceError(RuntimeError):

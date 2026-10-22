@@ -2,6 +2,7 @@
 import hashlib
 import json
 import os
+import re
 import time
 from pathlib import Path
 
@@ -44,11 +45,23 @@ def content_hash(movie):
     return hashlib.sha256(movie_text(movie).encode()).hexdigest()
 
 
+def director_filter(query, movies):
+    """An explicit known director is a factual constraint, not just a semantic hint."""
+    directors = set()
+    for movie in movies:
+        director = movie['director']
+        if re.search(r'\bby\s+' + re.escape(director.casefold()) + r'\b', query.casefold()):
+            directors.add(director)
+    if len(directors) == 1:
+        return {'director': {'$eq': directors.pop()}}
+    return None
+
+
 class MovieFinder:
     def __init__(self, *, encoder=None, index=None):
         self.namespace = os.getenv('PINECONE_NAMESPACE', 'movies-minilm-v1')
         try:
-            self.threshold = float(os.getenv('MOVIE_SIMILARITY_THRESHOLD', '0.35'))
+            self.threshold = float(os.getenv('MOVIE_SIMILARITY_THRESHOLD', '0.30'))
         except ValueError as exc:
             raise ServiceError('MOVIE_SIMILARITY_THRESHOLD must be a number from -1 to 1.') from exc
         if not -1 <= self.threshold <= 1:
@@ -61,7 +74,7 @@ class MovieFinder:
             pc = Pinecone(api_key=key)
             name = os.getenv('PINECONE_INDEX', 'movie-finder')
             if name not in pc.list_indexes().names():
-                pc.create_index(name=name, dimension=DIMENSION, metric='cosine',
+                pc.create_index(name=name, dimension=DIMENSION, metric='cosine', timeout=90,
                                 spec=ServerlessSpec(cloud=os.getenv('PINECONE_CLOUD', 'aws'),
                                                     region=os.getenv('PINECONE_REGION', 'us-east-1')))
             deadline = time.monotonic() + 90
@@ -113,7 +126,11 @@ class MovieFinder:
         if not query.strip():
             return []
         vector = self.encoder.encode(query.strip(), normalize_embeddings=True).tolist()
-        result = self.index.query(vector=vector, top_k=3, include_metadata=True, namespace=self.namespace)
+        params = dict(vector=vector, top_k=3, include_metadata=True, namespace=self.namespace)
+        constraint = director_filter(query, load_movies())
+        if constraint:
+            params['filter'] = constraint
+        result = self.index.query(**params)
         return [{'score': float(match.score), **match.metadata} for match in result.matches
                 if match.score >= self.threshold]
 

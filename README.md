@@ -14,6 +14,8 @@ Copy-Item .env.example .env
 
 On macOS/Linux use `python3 -m venv .venv`, `.venv/bin/python`, and `cp .env.example .env` instead. No shell activation is required.
 
+`requirements-lock.txt` records the exact dependency versions installed during local verification on Windows/Python 3.12. Use `pip install -r requirements-lock.txt` to reproduce that environment; `requirements.txt` keeps the supported version ranges readable.
+
 Edit `.env` locally and fill in `OPENROUTER_API_KEY` and `PINECONE_API_KEY`. Never commit this file. Create keys at [OpenRouter](https://openrouter.ai/keys) and [Pinecone](https://app.pinecone.io/). The configured Pinecone project must allow creating a serverless index. Defaults are AWS `us-east-1`, 384 dimensions, cosine metric. Check your provider account's current limits before running.
 
 ```powershell
@@ -23,7 +25,7 @@ Edit `.env` locally and fill in `OPENROUTER_API_KEY` and `PINECONE_API_KEY`. Nev
 .venv\Scripts\python -m streamlit run web_app.py
 ```
 
-All commands above run **from this directory**. The web app normally opens at `http://localhost:8501`. Console programs support `exit` at any prompt and Ctrl+C. The first movie search downloads the MiniLM model and creates/synchronizes the Pinecone index; allow extra time and an internet connection.
+All commands above run **from this directory**. The web app normally opens at `http://localhost:8501`. Console programs support `exit` at any prompt and Ctrl+C. The first movie search downloads the MiniLM model to the ignored `.model-cache` folder and creates/synchronizes the Pinecone index; allow extra time and an internet connection. An existing `HF_HOME` environment setting takes precedence.
 
 ## Project structure
 
