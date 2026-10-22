@@ -47,6 +47,8 @@ requirements.txt   Dependency constraints
 
 Read [TravelBuddy's README](travel_buddy/README.md) and [Movie Finder's README](movie_finder/README.md) for conversations and design decisions.
 
+[WALKTHROUGH.md](WALKTHROUGH.md) explains the code paths and design choices for a short project review.
+
 ## Verification
 
 ```powershell

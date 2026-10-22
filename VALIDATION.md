@@ -40,8 +40,8 @@ Live outputs can vary with model availability, provider limits, and stochastic L
 - Direct itinerary editing clears later choices; changing Mountains to Beach cannot leave a mountain activity selected.
 - Repeated queries skip embedding and Pinecone work, return independent copies, expire after five minutes, and honor threshold changes.
 - A live unknown-director query (Steven Spielberg, absent from the collection) returned no matches; the surname query "movies by nolan" returned only Nolan films.
-- A later live natural-language trip preference completed correctly in 3.84 seconds. The model response budget was retained after an attempted reduction proved unreliable in a separate check.
+- A later live natural-language trip preference completed correctly in 3.84 seconds.
 - Both local font URLs returned HTTP 200 with valid font bytes. Core text/button contrast pairs ranged from 4.61:1 to 11.27:1.
 - Ctrl+C during model/search calls returns a clean goodbye in the console regression checks.
 - [RESEARCH.md](RESEARCH.md) and `performance.json` record methods and backend timings.
-- The GitHub Actions run for commit `64ae006` passed all offline checks in clean Windows and Linux environments.
+- The GitHub Actions run for commits `64ae006` and `7e84097` passed all offline checks in clean Windows and Linux environments.

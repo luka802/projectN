@@ -16,7 +16,7 @@ The app creates the configured serverless Pinecone index if missing, checks dime
 
 ## Example conversation
 
-Observed results from the live acceptance run (scores rounded to three decimals):
+Abridged results from the live acceptance run (scores rounded to three decimals; the full console output also includes genre and description):
 
 ```text
 Welcome to Movie Finder! Loading MiniLM and connecting to Pinecone...
@@ -55,6 +55,10 @@ Use a namespace dedicated to this dataset/model (`movies-minilm-v1` by default).
 
 `--rag` sends the query and retrieved, threshold-qualified metadata to OpenRouter, with instructions to recommend only those films and avoid inventing facts. Original search results remain visible even if the LLM request fails. The Streamlit movie page offers the same feature through **Help me choose**, without repeating retrieval. Results and recommendations persist across page navigation. **Save these picks** downloads a text watchlist.
 
+## Faster repeat searches and saved films
+
+Identical queries are cached for five minutes (up to 32 entries), with independent result copies and cache invalidation on changed ingestion. The web UI also lets you save individual films across searches in **Saved for later** and download that combined shortlist. Saved selections last for the browser session.
+
 ## Live acceptance checklist
 
 1. Run the app twice; the second unchanged run should report zero new/changed movies.
@@ -64,4 +68,3 @@ Use a namespace dedicated to this dataset/model (`movies-minilm-v1` by default).
 5. Run `--rag` and ensure recommendations only mention retrieved films.
 6. Type `exit` and test blank queries and invalid credentials.
 
-Identical queries are cached for five minutes (up to 32 entries), with independent result copies and cache invalidation on changed ingestion. The web UI also lets you save individual films across searches in **Saved for later** and download that combined shortlist. Saved selections last for the browser session.

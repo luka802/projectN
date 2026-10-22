@@ -17,7 +17,7 @@ class ServiceError(RuntimeError):
 def chat(messages, *, temperature=0.5, max_tokens=500):
     key = os.getenv('OPENROUTER_API_KEY', '').strip()
     if not key:
-        raise ServiceError('Set OPENROUTER_API_KEY in assignments/.env first.')
+        raise ServiceError('Set OPENROUTER_API_KEY in the project root .env file first.')
     primary = os.getenv('OPENROUTER_MODEL', 'meta-llama/llama-3-8b-instruct')
     fallback = os.getenv('OPENROUTER_FALLBACK_MODEL', 'openrouter/free')
     models = list(dict.fromkeys([primary, fallback]))

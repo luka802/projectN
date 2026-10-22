@@ -54,6 +54,9 @@ def director_filter(query, movies):
     if not explicit:
         return None
     requested = explicit.group(1).strip().rstrip('.')
+    requested = re.split(r'\s+(?:about|with|without|from|in|released|that|featuring|set|for)\b',
+                         requested, maxsplit=1, flags=re.IGNORECASE)[0].strip()
+    requested = re.sub(r'\s+(?:please|thanks)$', '', requested, flags=re.IGNORECASE)
     aliases = {}
     for director in {movie['director'] for movie in movies}:
         for name in [director, *director.split(' and ')]:
@@ -82,7 +85,7 @@ class MovieFinder:
         if index is None:
             key = os.getenv('PINECONE_API_KEY', '').strip()
             if not key:
-                raise ServiceError('Set PINECONE_API_KEY in assignments/.env first.')
+                raise ServiceError('Set PINECONE_API_KEY in the project root .env file first.')
             from pinecone import Pinecone, ServerlessSpec
             pc = Pinecone(api_key=key)
             name = os.getenv('PINECONE_INDEX', 'movie-finder')

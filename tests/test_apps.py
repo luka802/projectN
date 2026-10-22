@@ -174,6 +174,8 @@ class MovieTests(unittest.TestCase):
         self.assertNotIn('filter', self.index.last_query)
         self.finder.search('movies by nolan')
         self.assertEqual(self.index.last_query['filter'], {'director': {'$eq': 'Christopher Nolan'}})
+        self.finder.search('movies by Christopher Nolan about space')
+        self.assertEqual(self.index.last_query['filter'], {'director': {'$eq': 'Christopher Nolan'}})
         self.finder.search('films by Steven Spielberg')
         self.assertEqual(self.index.last_query['filter'], {'director': {'$eq': 'Steven Spielberg'}})
 
