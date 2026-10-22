@@ -4,7 +4,7 @@ Verified locally on Windows with Python 3.12 on October 22, 2026.
 
 ## Automated checks
 
-`python -m unittest discover -s tests -v`: **25 tests passed** after the research and performance update.
+`python -m unittest discover -s tests -v`: **27 tests passed** after the research and performance update.
 
 Coverage includes travel state/history, unexpected and malformed answers, service failures, exit handling, unchanged/revised indexing, director filtering, threshold boundaries, Pinecone year normalization, RAG context, and OpenRouter fallback.
 
@@ -45,3 +45,9 @@ Live outputs can vary with model availability, provider limits, and stochastic L
 - Ctrl+C during model/search calls returns a clean goodbye in the console regression checks.
 - [RESEARCH.md](RESEARCH.md) and `performance.json` record methods and backend timings.
 - The GitHub Actions run for commits `64ae006` and `7e84097` passed all offline checks in clean Windows and Linux environments.
+
+## Midnight Premiere redesign
+
+The UI now defaults to film discovery and includes a dedicated saved-films page, original local artwork, dark/red styling, and accessible navigation tabs. An added UI regression verifies featured-film saving and saved-page removal without any model/database startup. Existing search, recovery, recommendation, and travel-flow tests still pass. The primary white-on-red button pair measures 4.88:1 contrast.
+
+The live redesign check returned the correct three Nolan films and preserved saved selections across navigation. A transient OpenRouter interruption was followed by a successful connection probe; the client now also tries the configured fallback after network errors and empty primary responses. A regression covers empty-response recovery. Recommendation output has a larger response budget and an explicit brief-answer instruction.

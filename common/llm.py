@@ -31,6 +31,8 @@ def chat(messages, *, temperature=0.5, max_tokens=500):
                 timeout=(10, 60),
             )
         except requests.RequestException as exc:
+            if position < len(models) - 1:
+                continue
             raise ServiceError('Cannot reach OpenRouter. Check your connection and try again.') from exc
         if response.status_code in (400, 402, 404, 429, 500, 502, 503, 504) and position < len(models) - 1:
             continue
@@ -42,5 +44,7 @@ def chat(messages, *, temperature=0.5, max_tokens=500):
                 raise ValueError('empty response')
             return content.strip()
         except (ValueError, KeyError, IndexError, TypeError) as exc:
+            if position < len(models) - 1:
+                continue
             raise ServiceError('OpenRouter returned an empty or unexpected response. Please retry.') from exc
     raise ServiceError('No configured OpenRouter model is available.')

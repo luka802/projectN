@@ -201,6 +201,14 @@ class MovieTests(unittest.TestCase):
 class OpenRouterTests(unittest.TestCase):
     @patch.dict(os.environ, {'OPENROUTER_API_KEY': 'test', 'OPENROUTER_MODEL': 'primary', 'OPENROUTER_FALLBACK_MODEL': 'fallback'})
     @patch('common.llm.requests.post')
+    def test_empty_primary_response_uses_fallback(self, post):
+        post.side_effect = [Mock(status_code=200, ok=True, json=lambda: {'choices': []}),
+                            Mock(status_code=200, ok=True, json=lambda: {'choices': [{'message': {'content': 'Recovered'}}]})]
+        self.assertEqual(chat([{'role': 'user', 'content': 'Hi'}]), 'Recovered')
+        self.assertEqual(post.call_count, 2)
+
+    @patch.dict(os.environ, {'OPENROUTER_API_KEY': 'test', 'OPENROUTER_MODEL': 'primary', 'OPENROUTER_FALLBACK_MODEL': 'fallback'})
+    @patch('common.llm.requests.post')
     def test_model_unavailable_uses_fallback(self, post):
         post.side_effect = [Mock(status_code=404), Mock(status_code=200, ok=True, json=lambda: {'choices': [{'message': {'content': 'Hello'}}]})]
         self.assertEqual(chat([{'role': 'user', 'content': 'Hi'}]), 'Hello')
