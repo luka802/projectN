@@ -36,6 +36,12 @@ class TravelTests(unittest.TestCase):
             bot.reply(text)
             self.assertEqual(bot.choices, [])
 
+    @patch('travel_buddy.bot.chat', return_value='{"choice":" mountains "}')
+    def test_model_choice_casing_is_normalized(self, llm):
+        bot = TravelBuddy()
+        bot.reply('somewhere with high peaks')
+        self.assertEqual(bot.choices, ['Mountains'])
+
     @patch('travel_buddy.bot.chat', side_effect=ServiceError('Unavailable'))
     def test_api_failure_preserves_choices(self, llm):
         bot = TravelBuddy(choices=['Beach'])
@@ -73,6 +79,7 @@ class MemoryIndex:
     def __init__(self):
         self.records = {}
         self.upsert_count = 0
+        self.query_count = 0
         self.matches = []
 
     def fetch(self, ids, namespace):
@@ -84,6 +91,7 @@ class MemoryIndex:
             self.records[vector['id']] = SimpleNamespace(metadata=vector['metadata'])
 
     def query(self, **kwargs):
+        self.query_count += 1
         self.last_query = kwargs
         return SimpleNamespace(matches=self.matches)
 
@@ -115,6 +123,41 @@ class MovieTests(unittest.TestCase):
         self.assertEqual(len(self.index.records), 30)
         self.assertEqual(self.index.records[identifier].metadata['content_hash'], content_hash(movies[0]))
 
+    def test_repeated_search_avoids_embedding_and_pinecone_and_returns_a_copy(self):
+        self.index.matches = [SimpleNamespace(score=0.8, metadata={'title': 'Example', 'year': 2000.0})]
+        first = self.finder.search('friendship')
+        first[0]['title'] = 'Changed by caller'
+        second = self.finder.search('friendship')
+        self.assertEqual(second[0]['title'], 'Example')
+        self.assertEqual(self.index.query_count, 1)
+        self.encoder.encode.assert_called_once()
+        self.finder.clear_search_cache()
+        self.finder.search('friendship')
+        self.assertEqual(self.index.query_count, 2)
+
+    def test_expired_search_is_refreshed(self):
+        self.finder.cache_seconds = 1
+        with patch('movie_finder.search.time.monotonic', return_value=100):
+            self.finder.search('friendship')
+        with patch('movie_finder.search.time.monotonic', return_value=102):
+            self.finder.search('friendship')
+        self.assertEqual(self.index.query_count, 2)
+
+    def test_threshold_change_does_not_reuse_previous_results(self):
+        self.index.matches = [SimpleNamespace(score=0.5, metadata={'title': 'Example'})]
+        self.assertEqual(len(self.finder.search('friendship')), 1)
+        self.finder.threshold = 0.8
+        self.assertEqual(self.finder.search('friendship'), [])
+        self.assertEqual(self.index.query_count, 2)
+
+    def test_edit_setting_discards_dependent_choices(self):
+        bot = TravelBuddy(choices=['Mountains', 'Camping', 'Stargazing'])
+        bot.edit(0)
+        self.assertEqual(bot.choices, [])
+        bot.reply('Beach')
+        bot.reply('Camping')
+        self.assertNotIn('Stargazing', bot.options)
+
     def test_threshold_filters_each_result_and_asks_for_top_three(self):
         self.finder.threshold = 0.35
         self.index.matches = [SimpleNamespace(score=score, metadata={'title': str(score)}) for score in [0.8, 0.35, 0.2]]
@@ -129,6 +172,10 @@ class MovieTests(unittest.TestCase):
         self.assertEqual(self.index.last_query['filter'], {'director': {'$eq': 'Christopher Nolan'}})
         self.finder.search('a movie about friendship')
         self.assertNotIn('filter', self.index.last_query)
+        self.finder.search('movies by nolan')
+        self.assertEqual(self.index.last_query['filter'], {'director': {'$eq': 'Christopher Nolan'}})
+        self.finder.search('films by Steven Spielberg')
+        self.assertEqual(self.index.last_query['filter'], {'director': {'$eq': 'Steven Spielberg'}})
 
     def test_pinecone_numeric_year_is_displayed_as_integer(self):
         self.index.matches = [SimpleNamespace(score=0.8, metadata={'title': 'Example', 'year': 2000.0})]
@@ -146,7 +193,7 @@ class MovieTests(unittest.TestCase):
         movies = [{'title': 'Example', 'year': 2000, 'score': 0.5}]
         self.finder.recommend('friendship', movies)
         context = json.loads(llm.call_args.args[0][1]['content'])
-        self.assertEqual(context['retrieved_movies'], movies)
+        self.assertEqual(context['retrieved_movies'], [{'title': 'Example', 'year': 2000}])
 
 
 class OpenRouterTests(unittest.TestCase):

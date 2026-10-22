@@ -7,10 +7,11 @@ def main():
     while not bot.closed:
         try:
             text = input('\nYou: ')
+            answer = bot.reply(text)
         except (EOFError, KeyboardInterrupt):
-            text = 'exit'
             print()
-        print('\nTravelBuddy:', bot.reply(text))
+            answer = bot.reply('exit')
+        print('\nTravelBuddy:', answer)
 
 
 if __name__ == '__main__':

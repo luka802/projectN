@@ -13,6 +13,9 @@ def main():
         finder = MovieFinder()
         updated = finder.sync()
         print(f'Ready! {updated} new or changed movies indexed. Type exit to quit.')
+    except KeyboardInterrupt:
+        print('\nGoodbye! Enjoy your next movie.')
+        return 0
     except Exception as exc:
         print(f'Could not initialize Movie Finder: {exc}')
         return 1
@@ -36,6 +39,9 @@ def main():
                     print('\nRecommendation:\n' + finder.recommend(query, movies))
                 except ServiceError as exc:
                     print(f'Recommendation unavailable: {exc}. Your search results are shown above.')
+        except KeyboardInterrupt:
+            print('\nGoodbye! Enjoy your next movie.')
+            return 0
         except Exception as exc:
             print(f'Search could not finish: {exc}. Please try again.')
 

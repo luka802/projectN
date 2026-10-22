@@ -14,7 +14,7 @@ class ServiceError(RuntimeError):
     """A safe, user-facing configuration or upstream service error."""
 
 
-def chat(messages, *, temperature=0.5):
+def chat(messages, *, temperature=0.5, max_tokens=500):
     key = os.getenv('OPENROUTER_API_KEY', '').strip()
     if not key:
         raise ServiceError('Set OPENROUTER_API_KEY in assignments/.env first.')
@@ -27,12 +27,12 @@ def chat(messages, *, temperature=0.5):
                 'https://openrouter.ai/api/v1/chat/completions',
                 headers={'Authorization': f'Bearer {key}'},
                 json={'model': model, 'messages': messages,
-                      'temperature': temperature, 'max_tokens': 500},
+                      'temperature': temperature, 'max_tokens': max_tokens},
                 timeout=(10, 60),
             )
         except requests.RequestException as exc:
             raise ServiceError('Cannot reach OpenRouter. Check your connection and try again.') from exc
-        if response.status_code in (400, 404, 429, 502, 503) and position < len(models) - 1:
+        if response.status_code in (400, 402, 404, 429, 500, 502, 503, 504) and position < len(models) - 1:
             continue
         if not response.ok:
             raise ServiceError(f'OpenRouter returned HTTP {response.status_code}. Check your API key, model, and account limits.')

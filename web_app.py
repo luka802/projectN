@@ -3,8 +3,9 @@ from html import escape
 from pathlib import Path
 import streamlit as st
 from common.llm import ServiceError
-from movie_finder.search import MovieFinder
+from movie_finder.search import MovieFinder, movie_id
 from travel_buddy.bot import TravelBuddy
+from ui_helpers import toggle_saved, watchlist_text
 
 ASSETS = Path(__file__).with_name('assets')
 st.set_page_config(page_title='Weekend & Watchlist', page_icon='✦', layout='centered')
@@ -64,6 +65,8 @@ def render_movie(movie, rank):
     </article>''')
 
 html('<div class="brand"><div class="brand-name"><span class="brand-mark" aria-hidden="true">✦</span> Weekend &amp; Watchlist</div><div class="brand-note">Make room for a good time</div></div>')
+if 'saved_movies' not in st.session_state:
+    st.session_state.saved_movies = {}
 page = st.radio('Choose your experience', ['Plan a getaway', 'Find a film'], horizontal=True, label_visibility='collapsed', key='experience')
 
 if page == 'Plan a getaway':
@@ -88,6 +91,11 @@ if page == 'Plan a getaway':
              ''.join(f'<div class="itinerary-row"><span>{label}</span><b>{escape(value)}</b></div>'
                      for label, value in zip(['Setting', 'Stay', 'Experience'], bot.choices)) + '</div>')
         st.download_button('Save your weekend plan ↓', data=bot.summary(), file_name='my-weekend-plan.txt', mime='text/plain', use_container_width=True)
+        edits = st.columns(3)
+        for index, label in enumerate(['Change setting', 'Change stay', 'Change activity']):
+            if edits[index].button(label, use_container_width=True):
+                bot.edit(index)
+                st.rerun()
         st.caption('An idea for your weekend, ready to make your own. Accommodation and activities are suggestions; nothing is booked.')
     elif bot.closed:
         st.info('Happy travels! Start a new trip whenever inspiration strikes.')
@@ -164,6 +172,19 @@ else:
                 st.session_state.pop('movie_recommendation', None)
             except Exception:
                 st.error('The movie collection is taking a little longer to connect. Please try again in a moment. Your previous picks are still here.')
+    saved = st.session_state.saved_movies
+    with st.expander(f'Saved for later ({len(saved)})'):
+        st.caption('Your personal shortlist for this session. Download it to keep a copy after closing the app.')
+        if not saved:
+            st.write('When a film catches your eye, choose Save for later beneath its card.')
+        for identifier, movie in list(saved.items()):
+            title_col, remove_col = st.columns([3, 2])
+            title_col.write(f'**{movie["title"]}** ({int(movie["year"])})')
+            remove_col.button(f'Remove {movie["title"]}', key=f'remove-{identifier}',
+                              on_click=toggle_saved, args=(saved, movie), use_container_width=True)
+        if saved:
+            st.download_button('Download saved films ↓', data=watchlist_text(saved.values()),
+                               file_name='saved-films.txt', mime='text/plain', use_container_width=True)
     if 'movie_results' in st.session_state:
         movies = st.session_state.movie_results
         last_query = st.session_state.last_movie_query
@@ -174,6 +195,10 @@ else:
             st.caption(f'Picked for “{last_query}”')
             for rank, movie in enumerate(movies, 1):
                 render_movie(movie, rank)
+                identifier = movie_id(movie)
+                is_saved = identifier in saved
+                st.button('Saved ✓ · remove' if is_saved else f'Save {movie["title"]} for later +',
+                          key=f'save-{identifier}', on_click=toggle_saved, args=(saved, movie))
             if st.button('Help me choose ✦', type='primary', use_container_width=True):
                 try:
                     with st.spinner('Putting together a personal recommendation...'):
@@ -183,7 +208,7 @@ else:
             if st.session_state.get('movie_recommendation'):
                 html('<div class="section-label">A little help choosing</div>')
                 st.markdown(st.session_state.movie_recommendation)
-            watchlist = '\n\n'.join(f'{m["title"]} ({m["year"]}) — {m["director"]}\n{m["description"]}' for m in movies)
+            watchlist = watchlist_text(movies)
             st.download_button('Save these picks ↓', data=watchlist, file_name='my-watchlist.txt', mime='text/plain', use_container_width=True)
             with st.expander('How these films were picked'):
                 st.write('We compare the meaning of your request with each film’s description, then show up to three close matches. Explicit director requests also filter by director. The order is a similarity ranking, not a film rating.')
