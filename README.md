@@ -47,7 +47,7 @@ Read [TravelBuddy's README](travel_buddy/README.md) and [Movie Finder's README](
 .venv\Scripts\python -m unittest discover -s tests -v
 ```
 
-These tests do not use API keys or claim to validate live services. Before submitting, run the live acceptance checklist in each app's README with your configured accounts. Do not include `.env`, `.venv`, or downloaded model weights in the repository.
+These tests do not use API keys. Separate live OpenRouter and Pinecone checks, actual retrieval scores, and UI checks are recorded in [VALIDATION.md](VALIDATION.md). The acceptance checklists in each app's README can be repeated with your configured accounts. Do not include `.env`, `.venv`, or downloaded model weights in the repository.
 
 ## Dependencies and API choices
 

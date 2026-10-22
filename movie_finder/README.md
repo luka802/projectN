@@ -16,18 +16,23 @@ The app creates the configured serverless Pinecone index if missing, checks dime
 
 ## Example conversation
 
-Illustrative output; exact ranking and scores must be checked with the downloaded model:
+Observed results from the live acceptance run (scores rounded to three decimals):
 
 ```text
 Welcome to Movie Finder! Loading MiniLM and connecting to Pinecone...
 Ready! 30 new or changed movies indexed. Type exit to quit.
 What would you like to watch? movies by Christopher Nolan
-[Up to three matching films are shown with title, director, genre,
-year, similarity score, and description.]
+1. Interstellar (2014) | Christopher Nolan | similarity 0.623
+2. Inception (2010) | Christopher Nolan | similarity 0.582
+3. Memento (2000) | Christopher Nolan | similarity 0.540
 What would you like to watch? something scary to watch tonight
-[Up to three horror/thriller matches are shown.]
+1. The Conjuring (2013) | similarity 0.403
+2. A Quiet Place (2018) | similarity 0.380
+3. Get Out (2017) | similarity 0.313
 What would you like to watch? a feel-good movie about friendship
-[Up to three relevant friendship films are shown.]
+1. The Shawshank Redemption (1994) | similarity 0.511
+2. The Intouchables (2011) | similarity 0.479
+3. Paddington 2 (2017) | similarity 0.458
 What would you like to watch? how to replace a bicycle tire
 I couldn't find any matching movies. Try a different genre, director, or theme.
 What would you like to watch? exit

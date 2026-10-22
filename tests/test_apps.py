@@ -118,6 +118,11 @@ class MovieTests(unittest.TestCase):
         self.finder.search('a movie about friendship')
         self.assertNotIn('filter', self.index.last_query)
 
+    def test_pinecone_numeric_year_is_displayed_as_integer(self):
+        self.index.matches = [SimpleNamespace(score=0.8, metadata={'title': 'Example', 'year': 2000.0})]
+        self.assertEqual(self.finder.search('example')[0]['year'], 2000)
+        self.assertIsInstance(self.finder.search('example')[0]['year'], int)
+
     @patch('movie_finder.search.chat')
     def test_no_match_skips_llm(self, llm):
         self.assertEqual(self.finder.search(''), [])

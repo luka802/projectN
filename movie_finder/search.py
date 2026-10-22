@@ -131,8 +131,16 @@ class MovieFinder:
         if constraint:
             params['filter'] = constraint
         result = self.index.query(**params)
-        return [{'score': float(match.score), **match.metadata} for match in result.matches
-                if match.score >= self.threshold]
+        movies = []
+        for match in result.matches:
+            if match.score < self.threshold:
+                continue
+            movie = {**match.metadata, 'score': float(match.score)}
+            # Pinecone returns numeric metadata as floats, including release years.
+            if 'year' in movie:
+                movie['year'] = int(movie['year'])
+            movies.append(movie)
+        return movies
 
     def recommend(self, query, movies):
         if not movies:
