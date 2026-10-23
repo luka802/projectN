@@ -1,0 +1,41 @@
+/* Movie Lounge: scoped separately from Coastal Escape. */
+.stApp:has(.lounge-marker){--paper:#0c1317;--ink:#edf0ee;--muted:#a7b2b6;--line:#2a373c;--red:#e4b477;background:var(--paper)}
+.lounge-marker{display:none}
+.stApp:has(.lounge-marker)::before{content:'';position:absolute;inset:0 0 auto;height:460px;pointer-events:none;background:linear-gradient(90deg,#0c1317 5%,#0c1317d9 38%,#0c131733 80%),linear-gradient(0deg,#0c1317,transparent 60%),url('app/static/art/lounge-hero.png') center 48%/cover no-repeat}
+.stApp:has(.lounge-marker) .brand{font-family:'Manrope',sans-serif;font-size:25px;font-weight:800;letter-spacing:-.04em}
+.stApp:has(.lounge-marker) .brand b{color:#edf0ee;font-weight:800}
+.stApp:has(.lounge-marker) .brand::before{content:'◉';margin-right:10px;color:#e4b477}
+.stApp:has(.lounge-marker) [data-testid='stRadio'] label:has(input:checked){border-color:#e4b477}
+.stApp:has(.lounge-marker) .nav-rule{background:#465056;opacity:.45}
+.lounge-hero{padding:1rem 0 .4rem;max-width:1000px}
+.lounge-hero .eyebrow{color:#bfcbcb;font-size:.7rem;letter-spacing:.22em;margin:.5rem 0 1rem}
+.lounge-hero h1{font-family:'Manrope',sans-serif!important;font-size:clamp(30px,3.7vw,53px)!important;line-height:1.15!important;letter-spacing:-.045em!important;font-weight:800!important;padding:0!important;margin:0!important}
+.lounge-hero em{color:#e4b477}.lounge-hero p{color:#b6c0c2;font-size:1rem;margin:1rem 0 .5rem}
+.stApp:has(.lounge-marker) [data-testid='stForm']{max-width:none}
+.stApp:has(.lounge-marker) [data-testid='stTextInput'] input{background:#192227e8;border-color:#3b494e;border-radius:30px;color:#edf0ee;min-height:54px!important}
+.stApp:has(.lounge-marker) [data-baseweb='input']{background:#192227;border-radius:30px}
+.stApp:has(.lounge-marker) [data-testid='stButton'] button,.stApp:has(.lounge-marker) [data-testid='stFormSubmitButton'] button,.stApp:has(.lounge-marker) [data-testid='stDownloadButton'] button{border-radius:24px;background:#141e23;color:#d5dddd;border-color:#34434a;min-height:44px;font-size:.85rem}
+.stApp:has(.lounge-marker) button[kind='primary'],.stApp:has(.lounge-marker) button[kind='primaryFormSubmit']{background:#e4b477!important;border-color:#e4b477!important;color:#172025!important}
+.stApp:has(.lounge-marker) button [data-testid='stMarkdownContainer'],.stApp:has(.lounge-marker) button p{color:inherit!important}
+.stApp:has(.lounge-marker) button:hover{background:#243037;color:#f6dfc1;border-color:#b78a58}
+.stApp:has(.lounge-marker) button[kind='primary']:hover,.stApp:has(.lounge-marker) button[kind='primaryFormSubmit']:hover{background:#edc595!important}
+.stApp:has(.lounge-marker) button:focus-visible,.stApp:has(.lounge-marker) input:focus-visible,.stApp:has(.lounge-marker) [data-testid='stRadio'] label:has(input:focus-visible){outline:3px solid #e4b477!important;outline-offset:3px}
+.stApp:has(.lounge-marker) .movie-card{background:linear-gradient(#141e23,#10191e);border:1px solid #28373d;border-radius:14px;box-shadow:0 8px 24px #0002}
+.stApp:has(.lounge-marker) .poster{aspect-ratio:1.85;background-position:center 38%!important}
+.stApp:has(.lounge-marker) .poster::after{inset:65% 0 0;background:linear-gradient(transparent,#141e23)}
+.rank-badge{position:absolute;z-index:1;left:13px;top:13px;display:grid;place-items:center;background:#f1dab6;color:#1a252b;border-radius:8px;width:30px;height:30px;font-weight:800;font-size:.85rem}
+.stApp:has(.lounge-marker) .movie-info{padding:14px 18px 20px}
+.stApp:has(.lounge-marker) .movie-title{font-size:1.15rem!important}.stApp:has(.lounge-marker) .movie-title span{font-size:.85rem;color:#9baeb5}
+.stApp:has(.lounge-marker) .movie-meta{font-size:.8rem;color:#a4b5bc}
+.stApp:has(.lounge-marker) .movie-description{min-height:4.8em;font-size:.85rem;color:#b5c0c3}
+.stApp:has(.lounge-marker) .movie-genre{color:#e2be8d;font-size:.72rem}
+.stApp:has(.lounge-marker) .results-heading{margin:1.2rem 0 .5rem}.stApp:has(.lounge-marker) .results-heading strong{font-weight:700}.stApp:has(.lounge-marker) .results-heading span{color:#94a6ae}
+.stApp:has(.lounge-marker) [data-testid='stExpander']{background:#111b20;border-color:#2b3c43!important;border-radius:12px!important}
+.stApp:has(.lounge-marker) .empty-state{background:#131e24;border-color:#3e515b}
+.stApp:has(.lounge-marker) .saved-heading h1{font-family:'Manrope',sans-serif!important;font-size:clamp(32px,4vw,56px)!important;font-weight:800!important}
+.stApp:has(.lounge-marker) .eyebrow{color:#e4b477}
+.explore-art{aspect-ratio:1.35;background-repeat:no-repeat;border:1px solid #2b3a42;border-radius:10px;margin:.3rem 0 .55rem}
+.explore-title{font-size:.8rem;font-weight:700;line-height:1.4;min-height:2.8em;color:#dfe5e5}.explore-year{font-size:.72rem;color:#8fa3ae;margin-bottom:.6rem}
+@media(max-width:1000px){.st-key-mood-chips [data-testid='stColumn']{min-width:28%!important;flex:1 1 28%!important}}
+@media(max-width:900px){.stApp:has(.lounge-marker) .movie-description{font-size:.8rem;min-height:8em}.stApp:has(.lounge-marker) .movie-info{padding:12px}.lounge-hero{padding-top:.3rem}.stApp:has(.lounge-marker) [data-testid='stHorizontalBlock']:has(.explore-art)>[data-testid='stColumn']{min-width:28%!important;flex:1 1 28%!important}.stApp:has(.lounge-marker) [data-testid='stHorizontalBlock']:has(button[key]){gap:.5rem}}
+@media(max-width:640px){.lounge-hero h1{font-size:34px!important}.lounge-hero p{font-size:.9rem}.stApp:has(.lounge-marker) .poster{aspect-ratio:1.75}.stApp:has(.lounge-marker) .movie-description{min-height:0;font-size:.88rem}.stApp:has(.lounge-marker)::before{height:420px;background-position:65% center}.stApp:has(.lounge-marker) [data-testid='stHorizontalBlock']:has(.explore-art)>[data-testid='stColumn']{min-width:44%!important;flex:1 1 44%!important}.stApp:has(.lounge-marker) [data-testid='stHorizontalBlock']:has([data-testid='stButton']){flex-wrap:wrap}}

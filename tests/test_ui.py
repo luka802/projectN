@@ -76,6 +76,24 @@ class InterfaceTests(unittest.TestCase):
         self.assertEqual(len(app.get('download_button')), 1)
 
     @patch('movie_finder.search.MovieFinder')
+    def test_lounge_explore_and_similar_actions_run_real_search_path(self, factory):
+        finder = Mock()
+        movie = {**load_movies()[0], 'score': 0.5}
+        finder.search.return_value = [movie]
+        factory.return_value = finder
+        app = AppTest.from_file(APP).run()
+        self.assertTrue(any('lounge-marker' in m.value for m in app.markdown))
+        next(b for b in app.button if b.label == 'Explore →').click().run()
+        self.assertFalse(app.exception)
+        self.assertEqual(finder.search.call_count, 1)
+        self.assertEqual(app.session_state.movie_results, [movie])
+        click(app, f'Save {movie["title"]} for later +')
+        click(app, 'More like this →')
+        self.assertEqual(finder.search.call_count, 2)
+        self.assertIn(movie['description'], finder.search.call_args.args[0])
+        self.assertEqual(len(app.session_state.saved_movies), 1)
+
+    @patch('movie_finder.search.MovieFinder')
     def test_search_suggestions_persistence_recommendation_and_recovery(self, factory):
         finder = Mock()
         movies = [{**m, 'score': 0.5} for m in load_movies()[:3]]

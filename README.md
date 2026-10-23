@@ -38,7 +38,7 @@ movie_finder/      Movie data, ingestion, retrieval, RAG, console entry point, R
 tests/             Offline regression tests using service doubles
 web_app.py         Optional Streamlit UI for both apps
 assets/            Cinema and coastal styles, plus original SVG illustrations
-static/art/        Seven original local cinema and destination images
+static/art/        Eight original local cinema and destination images
 static/fonts/      Locally served fonts and open licenses
 .streamlit/        Theme and lightweight runtime settings
 .github/workflows/ Windows and Linux offline regression checks
@@ -78,7 +78,7 @@ The default page is **Find a film**. Use the top navigation to switch between al
 
 **Plan a getaway** uses the selected Coastal Escape theme: ocean blue, white panels, destination photographs, and pale choice buttons. Clicking a choice advances immediately. **Back a step** removes the latest choice. On the completed plan, **Change setting**, **Change stay**, and **Change activity** clear the edited step and any later choices. **Save your weekend plan** downloads a text itinerary; it does not book accommodation or activities.
 
-**Find a film** and **Saved films** retain the Midnight Premiere theme: charcoal, red accents, a space backdrop, and artwork-led movie cards. The initial featured collection appears without loading the model or connecting to Pinecone. A submitted search uses real MiniLM embeddings and Pinecone. **Save these picks** exports the current results; **Download saved films** exports the separate shortlist you built across searches. Search failures retain previous results. A successful new search clears the old AI recommendation.
+**Find a film** and **Saved films** use the Movie Lounge theme: charcoal, restrained amber accents, a cosy movie-night backdrop, and compact landscape film cards. The initial featured collection appears without loading the model or connecting to Pinecone. A submitted search uses real MiniLM embeddings and Pinecone. Six mood shortcuts run actual searches. **More like this** searches using a result’s genre and description; **More to explore** offers six collection-based search shortcuts. **Save these picks** exports the current results; **Download saved films** exports the separate shortlist you built across searches. Search failures retain previous results. A successful new search clears the old AI recommendation.
 
 Trip choices and saved films are held in Streamlit Session State, not an account or permanent database. Switching pages in the app preserves them; reloading, closing, or reconnecting the browser can start a new session. Download anything you want to keep.
 
@@ -122,7 +122,7 @@ Model availability and account quotas can change. The client tries the configure
 
 The Streamlit resource cache reuses the model and database client. Identical movie searches are cached for up to five minutes (32 entries maximum). Cached results are copied, respect the threshold, and clear when ingestion updates the collection. Exact travel choices skip the LLM. [RESEARCH.md](RESEARCH.md) records comparable-product research and observed backend timings.
 
-All seven raster images and all fonts are served locally. Original artwork, source paths, and generation prompts are recorded in [ARTWORK.md](ARTWORK.md). The six-panel genre atlas supplies artwork for films without an individual image. Artwork is illustrative, not an official movie poster or a claim of a bookable destination.
+All eight raster images and all fonts are served locally. Original artwork, source paths, and generation prompts are recorded in [ARTWORK.md](ARTWORK.md). The six-panel genre atlas supplies artwork for films without an individual image. Artwork is illustrative, not an official movie poster or a claim of a bookable destination.
 
 User/provider content is HTML-escaped before insertion into styled cards. The interface includes keyboard focus indicators, reduced-motion styles, and responsive card layouts. Automated UI tests check behavior; observed live checks and the limits of visual verification are recorded in [VALIDATION.md](VALIDATION.md).
 

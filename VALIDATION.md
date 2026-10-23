@@ -55,3 +55,7 @@ Live outputs can vary with model availability, provider limits, and stochastic L
 The UI now defaults to film discovery and includes a dedicated saved-films page, original local artwork, dark/red styling, and accessible navigation tabs. An added UI regression verifies featured-film saving and saved-page removal without any model/database startup. Existing search, recovery, recommendation, and travel-flow tests still pass. The primary white-on-red button pair measures 4.88:1 contrast.
 
 The live redesign check returned the correct three Nolan films and preserved saved selections across navigation. A transient OpenRouter interruption was followed by a successful connection probe; the client now also tries the configured fallback after network errors and empty primary responses. A regression covers empty-response recovery. Recommendation output has a larger response budget and an explicit brief-answer instruction.
+
+## Movie Lounge follow-up — October 23, 2026
+
+The user-selected charcoal/amber reference replaces the red cinema styling. Search and saved-film pages share the new theme; travel keeps Coastal Escape. A new regression verifies Explore and More like this both call the existing search path and preserve saved films. The full offline suite passes **29 tests**. Generated hero artwork was visually inspected; a browser screenshot review remains unavailable because local preview access was denied by the browser tool earlier in this session.
