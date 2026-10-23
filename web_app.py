@@ -56,11 +56,10 @@ def queue_query(query):
     st.session_state.movie_input = query
     st.session_state.queued_query = query
 
-def render_movie(movie, rank, *, ranked=False):
+def render_movie(movie, rank):
     title = escape(movie['title'])
     style = poster_style(movie)
-    badge = f'<span class="rank-badge" aria-label="Match {rank}">{rank}</span>' if ranked else ''
-    html(f'<article class="movie-card"><div class="poster" role="img" aria-label="Original cinematic artwork for {title}" style="{style}">{badge}</div>'
+    html(f'<article class="movie-card"><div class="poster" role="img" aria-label="Original cinematic artwork for {title}" style="{style}"><div class="poster-title">{title}</div></div>'
          f'<div class="movie-info"><h3 class="movie-title">{title} <span>({int(movie["year"])})</span></h3>'
          f'<div class="movie-meta">{escape(movie["director"])}</div>'
          f'<p class="movie-description">{escape(movie["description"])}</p>'
@@ -73,8 +72,6 @@ with nav_col:
     page = st.radio('Choose your experience', ['Plan a getaway', 'Find a film', 'Saved films'], index=1,
                     horizontal=True, label_visibility='collapsed', key='experience')
 html('<div class="nav-rule"></div>')
-if page != 'Plan a getaway':
-    html(f'<style>{(ASSETS / "lounge.css").read_text(encoding="utf-8")}</style><div class="lounge-marker" aria-hidden="true"></div>')
 if 'saved_movies' not in st.session_state:
     st.session_state.saved_movies = {}
 
@@ -166,7 +163,7 @@ elif page == 'Saved films':
         st.download_button('Download saved films ↓', data=watchlist_text(saved.values()), file_name='saved-films.txt', mime='text/plain')
         st.caption('Saved for this session. Download your list to keep it after closing the app.')
 else:
-    html('<section class="lounge-hero"><div class="eyebrow">MOVIES FOR EVERY MOOD</div><h1>What do you want to <em>watch?</em></h1><p>Describe a movie, a feeling, a director, or just a vibe. Find something for tonight.</p></section>')
+    html('<section class="cinema-hero"><h1>Your next<br>great <em>film.</em></h1><p>Thoughtful recommendations for your next movie night.</p></section>')
     if 'movie_input' not in st.session_state:
         st.session_state.movie_input = st.session_state.get('last_movie_query', '')
     with st.form('movie-query'):
@@ -174,11 +171,10 @@ else:
         query = search_col.text_input('What are you in the mood for?', placeholder='Movies by Christopher Nolan', key='movie_input', max_chars=1000, label_visibility='collapsed')
         with submit_col:
             submitted = st.form_submit_button('Find films →', type='primary', use_container_width=True)
-    with st.container(key='mood-chips'):
-        suggestions = st.columns(6)
-        examples = [('A little suspense', 'something scary to watch tonight'), ('A Nolan night', 'movies by Christopher Nolan'), ('Something feel-good', 'a feel-good movie about friendship'), ('Mind-bending', 'a mind-bending science fiction movie'), ('Action-packed', 'an action movie with a thrilling adventure'), ('About friendship', 'a movie about friendship')]
-        for column, (label, example) in zip(suggestions, examples):
-            column.button(label, on_click=queue_query, args=(example,), use_container_width=True)
+    suggestions = st.columns(3)
+    examples = [('A little suspense', 'something scary to watch tonight'), ('A Nolan night', 'movies by Christopher Nolan'), ('Something feel-good', 'a feel-good movie about friendship')]
+    for column, (label, example) in zip(suggestions, examples):
+        column.button(label, on_click=queue_query, args=(example,), use_container_width=True)
     requested = st.session_state.pop('queued_query', None)
     if submitted:
         requested = query.strip()
@@ -229,13 +225,11 @@ else:
             columns = st.columns(3, gap='medium')
             for rank, movie in enumerate(movies, 1):
                 with columns[rank - 1]:
-                    render_movie(movie, rank, ranked=True)
+                    render_movie(movie, rank)
                     identifier = movie_id(movie)
                     is_saved = identifier in saved
                     st.button('Saved ✓ · remove' if is_saved else f'Save {movie["title"]} for later +',
                               key=f'save-{identifier}', on_click=toggle_saved, args=(saved, movie), use_container_width=True)
-                    st.button('More like this →', key=f'similar-{identifier}', on_click=queue_query,
-                              args=(f'{movie["genre"]} movies about {movie["description"]}',), use_container_width=True)
             if st.button('Help me choose ✦', type='primary', use_container_width=True):
                 try:
                     with st.spinner('Putting together a personal recommendation...'):
@@ -263,15 +257,5 @@ else:
                 identifier = movie_id(movie)
                 st.button('Saved ✓ · remove' if identifier in saved else f'Save {title} for later +',
                           key=f'featured-{identifier}', on_click=toggle_saved, args=(saved, movie), use_container_width=True)
-    html('<div class="results-heading"><strong>More to explore</strong><span>From our 30-film collection</span></div>')
-    browse = st.columns(6)
-    collection = {m['title']: m for m in load_movies()}
-    for column, title in zip(browse, ['The Dark Knight', 'Arrival', 'Parasite', 'La La Land', 'The Grand Budapest Hotel', 'Paddington 2']):
-        movie = collection.get(title)
-        if movie:
-            with column:
-                html(f'<div class="explore-art" role="img" aria-label="Illustrative {escape(movie["genre"])} artwork" style="{poster_style(movie)}"></div><div class="explore-title">{escape(title)}</div><div class="explore-year">{movie["year"]}</div>')
-                st.button('Explore →', key=f'explore-{movie_id(movie)}', on_click=queue_query,
-                          args=(f'{movie["genre"]} movies about {movie["description"]}',), use_container_width=True)
 html('<div class="footer"><span>Weekend &amp; Watchlist · Your next great story.</span><span>' +
      ('Three simple steps. A weekend to make your own.' if page == 'Plan a getaway' else 'A small collection. A world of possibilities.') + '</span></div>')

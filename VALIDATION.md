@@ -56,6 +56,6 @@ The UI now defaults to film discovery and includes a dedicated saved-films page,
 
 The live redesign check returned the correct three Nolan films and preserved saved selections across navigation. A transient OpenRouter interruption was followed by a successful connection probe; the client now also tries the configured fallback after network errors and empty primary responses. A regression covers empty-response recovery. Recommendation output has a larger response budget and an explicit brief-answer instruction.
 
-## Movie Lounge follow-up — October 23, 2026
+## Slate cinema palette — October 23, 2026
 
-The user-selected charcoal/amber reference replaces the red cinema styling. Search and saved-film pages share the new theme; travel keeps Coastal Escape. A new regression verifies Explore and More like this both call the existing search path and preserve saved films. The full offline suite passes **29 tests**. Generated hero artwork was visually inspected; a browser screenshot review remains unavailable because local preview access was denied by the browser tool earlier in this session.
+Restored the movie layout preceding Movie Lounge at the user's request. Removed the lounge-only Explore/More like this controls and hero. Cinema now uses slate blue, charcoal, and soft ivory inspired by the supplied city artwork. Coastal Escape is retained. The corresponding 28-test suite is used again.

@@ -50,9 +50,3 @@ Use case: ads-marketing. One square 1536x1536 cinematic artwork sprite sheet, EX
 ## Typography
 
 Anton supplies the condensed cinematic headline and brand. DM Sans and Manrope cover supporting UI text. Original font files and OFL licenses are bundled under `static/fonts/`.
-
-## Movie Lounge update
-
-`static/art/lounge-hero.png` is the original locally served home-cinema background. Existing film artworks are retained, shown in compact landscape frames with titles as separate HTML text. They are illustrative images, not official posters.
-
-Generation prompt: "Use case: photorealistic-natural. Asset type: wide movie-discovery website hero background, 1536x1024 landscape. Premium cozy home cinema at night, dark charcoal room, warm amber practical lamplight on right, softly glowing large television in upper right showing an indistinct cinematic sunset city scene with tiny anonymous silhouettes, textured sofa with soft throw lower right, bowl of popcorn nearby. Left 55 percent is quiet near-black charcoal negative space for readable website headline overlay, no people in the room, no text, no lettering, no logos, no UI, no watermarks. Photoreal cinematic still with crisp natural textures and controlled subtle warm lighting, muted amber and deep blue-black, no red, no oversaturated neon. Details and highlights right of center. Elegant movie-night atmosphere."
