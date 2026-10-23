@@ -1,5 +1,9 @@
 # Validation record
 
+## Coastal Escape follow-up — October 23, 2026
+
+All **28 tests passed** after applying the selected blue-and-white travel design. The guided setting/stay/activity flow, back/edit/reset, download availability, and existing film features pass. A new UI regression submits a natural-language travel preference through Continue, navigates to film discovery and back, completes the preserved trip, and verifies download availability. It also confirms the coastal stylesheet is present only on the getaway page. Direct menu choices still bypass the LLM. Final browser screenshot review was unavailable because the browser tool denied access to the local preview; the functional UI checks use Streamlit AppTest.
+
 Verified locally on Windows with Python 3.12 on October 22, 2026.
 
 ## Automated checks

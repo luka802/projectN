@@ -41,6 +41,7 @@ class InterfaceTests(unittest.TestCase):
         app = AppTest.from_file(APP).run()
         app.radio[0].set_value('Plan a getaway').run()
         self.assertFalse(app.exception)
+        self.assertTrue(any('coastal-marker' in m.value for m in app.markdown))
         click(app, 'Choose Mountains')
         self.assertEqual(app.session_state.travel.choices, ['Mountains'])
         click(app, '← Back a step')
@@ -55,6 +56,24 @@ class InterfaceTests(unittest.TestCase):
         click(app, 'Start a new trip ↗')
         self.assertEqual(app.session_state.travel.choices, [])
         llm.assert_not_called()
+
+    @patch('travel_buddy.bot.chat')
+    def test_coastal_preference_and_navigation_preserve_plan(self, llm):
+        llm.return_value = json.dumps({'choice': 'Mountains'})
+        app = AppTest.from_file(APP).run()
+        app.radio[0].set_value('Plan a getaway').run()
+        app.text_input[0].set_value('Fresh mountain air and hiking please')
+        click(app, 'Continue →')
+        self.assertEqual(app.session_state.travel.choices, ['Mountains'])
+        llm.assert_called_once()
+        app.radio[0].set_value('Find a film').run()
+        self.assertFalse(any('coastal-marker' in m.value for m in app.markdown))
+        app.radio[0].set_value('Plan a getaway').run()
+        self.assertEqual(app.session_state.travel.choices, ['Mountains'])
+        click(app, 'Choose Cozy guesthouse')
+        click(app, 'Choose Stargazing')
+        self.assertTrue(app.session_state.travel.complete)
+        self.assertEqual(len(app.get('download_button')), 1)
 
     @patch('movie_finder.search.MovieFinder')
     def test_search_suggestions_persistence_recommendation_and_recovery(self, factory):

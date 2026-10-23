@@ -76,74 +76,79 @@ if 'saved_movies' not in st.session_state:
     st.session_state.saved_movies = {}
 
 if page == 'Plan a getaway':
+    html(f'<style>{(ASSETS / "coastal.css").read_text(encoding="utf-8")}</style><div class="coastal-marker" aria-hidden="true"></div>')
     if 'travel' not in st.session_state:
         st.session_state.travel = TravelBuddy()
         st.session_state.travel.start()
     bot = st.session_state.travel
-    hero('travel', 'A change of scenery', 'Small escape.\nBig reset.',
-         'Some weekends deserve a different view. Find your kind of getaway, one simple choice at a time.',
-         ['3 simple steps', 'Made for your mood', 'No bookings needed'], compact=bool(bot.choices) or bot.closed)
-    stage = len(bot.choices)
-    labels = ['The setting', 'Your stay', 'The experience']
-    html('<div class="steps">' + ''.join(
-        f'<div class="step {"done" if stage > i else "active" if stage == i else ""}"><b>{"✓" if stage > i else f"0{i+1}"}</b> {label}</div>'
-        for i, label in enumerate(labels)) + '</div>')
-    if bot.choices:
-        html('<div class="hero-facts">' + ''.join(f'<span>✓ {escape(c)}</span>' for c in bot.choices) + '</div>')
-    if st.session_state.get('travel_notice'):
-        st.warning(st.session_state.pop('travel_notice'))
-    if bot.complete:
-        html('<div class="itinerary"><div class="tag">YOUR WEEKEND, SORTED</div><h3>A little adventure to look forward to.</h3>' +
-             ''.join(f'<div class="itinerary-row"><span>{label}</span><b>{escape(value)}</b></div>'
-                     for label, value in zip(['Setting', 'Stay', 'Experience'], bot.choices)) + '</div>')
-        st.download_button('Save your weekend plan ↓', data=bot.summary(), file_name='my-weekend-plan.txt', mime='text/plain', use_container_width=True)
-        edits = st.columns(3)
-        for index, label in enumerate(['Change setting', 'Change stay', 'Change activity']):
-            if edits[index].button(label, use_container_width=True):
-                bot.edit(index)
+    html('<section class="coastal-hero' + (' coastal-compact' if bot.choices or bot.closed else '') + '"><div class="coastal-copy">'
+         '<div class="eyebrow">YOUR WEEKEND STARTS HERE</div><h1>A little further<br>from ordinary.</h1>'
+         '<div class="coastal-underline"></div><p>Your next weekend, planned<br>around you.</p></div></section>')
+    with st.container(key='travel-planner'):
+        stage = len(bot.choices)
+        labels = ['The setting', 'Your stay', 'The experience']
+        html('<div class="steps">' + ''.join(
+            f'<div class="step {"done" if stage > i else "active" if stage == i else ""}" {"aria-current=\"step\"" if stage == i else ""}><b>{"✓" if stage > i else i+1}</b><span>{label}</span></div>'
+            for i, label in enumerate(labels)) + '</div>')
+        if bot.choices:
+            html('<div class="hero-facts">' + ''.join(f'<span>✓ {escape(c)}</span>' for c in bot.choices) + '</div>')
+        if st.session_state.get('travel_notice'):
+            st.warning(st.session_state.pop('travel_notice'))
+        if bot.complete:
+            html('<div class="itinerary"><div class="tag">YOUR WEEKEND, SORTED</div><h3>A little adventure to look forward to.</h3>' +
+                 ''.join(f'<div class="itinerary-row"><span>{label}</span><b>{escape(value)}</b></div>'
+                         for label, value in zip(['Setting', 'Stay', 'Experience'], bot.choices)) + '</div>')
+            st.download_button('Save your weekend plan ↓', data=bot.summary(), file_name='my-weekend-plan.txt', mime='text/plain', use_container_width=True)
+            edits = st.columns(3)
+            for index, label in enumerate(['Change setting', 'Change stay', 'Change activity']):
+                if edits[index].button(label, use_container_width=True):
+                    bot.edit(index)
+                    st.rerun()
+            st.caption('An idea for your weekend, ready to make your own. Accommodation and activities are suggestions; nothing is booked.')
+        elif bot.closed:
+            st.info('Happy travels! Start a new trip whenever inspiration strikes.')
+        else:
+            headings = ['Where would you rather be?', 'Find your home away from home.', 'Make a little memory.']
+            notes = ['Pick the setting that feels like your kind of weekend.', 'Choose a place that suits your pace.', 'These experiences are chosen to fit your destination.']
+            html(f'<div class="section-label">{headings[stage]}</div><div class="section-note">{notes[stage]}</div>')
+            selected = None
+            columns = st.columns(3, gap='medium')
+            for i, option in enumerate(bot.options):
+                icon, description, color = CHOICE_DETAILS[option]
+                with columns[i]:
+                    with st.container(border=True):
+                        art = (f'<div class="destination-photo destination-{i}" role="img" aria-label="{escape(option)} scenery"></div>' if stage == 0 else
+                               f'<div class="choice-art" aria-hidden="true" style="--tile:{color}">{icon}</div>')
+                        html(f'{art}<div class="choice-title">{escape(option)}</div><div class="choice-description">{description}</div>')
+                        if st.button(f'Choose {option}', key=f'choice-{stage}-{i}', use_container_width=True, type='primary'):
+                            selected = option
+            with st.form('travel-preference', clear_on_submit=True):
+                input_col, send_col = st.columns([4, 1.2], vertical_alignment='bottom')
+                preference = input_col.text_input('Tell us what you have in mind (optional)', placeholder='For example: a quiet beach, fresh mountain air, or a foodie city', max_chars=1000)
+                with send_col:
+                    send = st.form_submit_button('Continue →', type='primary', use_container_width=True)
+            answer = selected or (preference if send else None)
+            if answer is not None:
+                before = len(bot.choices)
+                with st.spinner('A little planning magic...'):
+                    response = bot.reply(answer)
+                if len(bot.choices) == before and not bot.closed and answer.casefold().strip() != 'restart':
+                    st.session_state.travel_notice = response.split("Let's choose", 1)[0].strip()
                 st.rerun()
-        st.caption('An idea for your weekend, ready to make your own. Accommodation and activities are suggestions; nothing is booked.')
-    elif bot.closed:
-        st.info('Happy travels! Start a new trip whenever inspiration strikes.')
-    else:
-        headings = ['Where would you rather be?', 'Find your home away from home.', 'Make a little memory.']
-        notes = ['Pick the setting that feels like your kind of weekend.', 'Choose a place that suits your pace.', 'These experiences are chosen to fit your destination.']
-        html(f'<div class="section-label">{headings[stage]}</div><div class="section-note">{notes[stage]}</div>')
-        selected = None
-        columns = st.columns(3, gap='medium')
-        for i, option in enumerate(bot.options):
-            icon, description, color = CHOICE_DETAILS[option]
-            with columns[i]:
-                with st.container(border=True):
-                    html(f'<div class="choice-art" aria-hidden="true" style="--tile:{color}">{icon}</div><div class="choice-title">{escape(option)}</div><div class="choice-description">{description}</div>')
-                    if st.button(f'Choose {option}', key=f'choice-{stage}-{i}', use_container_width=True, type='primary'):
-                        selected = option
-        st.caption('Have something in mind? You can describe your preference below, too.')
-        with st.form('travel-preference', clear_on_submit=True):
-            preference = st.text_input('Or tell TravelBuddy what you like', placeholder='For example: somewhere with fresh mountain air', max_chars=1000)
-            send = st.form_submit_button('Send preference →', use_container_width=True)
-        answer = selected or (preference if send else None)
-        if answer is not None:
-            before = len(bot.choices)
-            with st.spinner('A little planning magic...'):
-                response = bot.reply(answer)
-            if len(bot.choices) == before and not bot.closed and answer.casefold().strip() != 'restart':
-                st.session_state.travel_notice = response.split("Let's choose", 1)[0].strip()
+        controls = st.columns(2)
+        if controls[0].button('← Back a step', disabled=not bot.choices or bot.closed, use_container_width=True):
+            bot.back()
             st.rerun()
-    controls = st.columns(2)
-    if controls[0].button('← Back a step', disabled=not bot.choices or bot.closed, use_container_width=True):
-        bot.back()
-        st.rerun()
-    if controls[1].button('Start a new trip ↗', use_container_width=True):
-        st.session_state.travel = TravelBuddy()
-        st.session_state.travel.start()
-        st.session_state.pop('travel_notice', None)
-        st.rerun()
-    with st.expander('Your conversation'):
-        st.caption('Your choices stay in this session. Type exit in the preference field to end the conversation.')
-        for message in bot.history:
-            with st.chat_message(message['role']):
-                st.markdown(message['content'])
+        if controls[1].button('Start a new trip ↗', use_container_width=True):
+            st.session_state.travel = TravelBuddy()
+            st.session_state.travel.start()
+            st.session_state.pop('travel_notice', None)
+            st.rerun()
+        with st.expander('Your conversation'):
+            st.caption('Your choices stay in this session. Type exit in the preference field to end the conversation.')
+            for message in bot.history:
+                with st.chat_message(message['role']):
+                    st.markdown(message['content'])
 elif page == 'Saved films':
     html('<div class="saved-heading"><div class="eyebrow">YOUR PERSONAL SCREENING LIST</div><h1>Worth saving.<br>Worth <em>watching.</em></h1></div>')
     saved = st.session_state.saved_movies
@@ -252,4 +257,5 @@ else:
                 identifier = movie_id(movie)
                 st.button('Saved ✓ · remove' if identifier in saved else f'Save {title} for later +',
                           key=f'featured-{identifier}', on_click=toggle_saved, args=(saved, movie), use_container_width=True)
-html('<div class="footer"><span>Weekend &amp; Watchlist · Your next great story.</span><span>A small collection. A world of possibilities.</span></div>')
+html('<div class="footer"><span>Weekend &amp; Watchlist · Your next great story.</span><span>' +
+     ('Three simple steps. A weekend to make your own.' if page == 'Plan a getaway' else 'A small collection. A world of possibilities.') + '</span></div>')

@@ -1,0 +1,58 @@
+/* This theme exists only on the getaway page; cinema keeps its own palette. */
+.stApp:has(.coastal-marker){--ink:#083f57;--muted:#61748d;--paper:#f6fbfd;--line:#d7e2e9;--red:#0c6179;background:var(--paper);color:var(--ink);--text-color:#083f57;--background-color:#f6fbfd;--secondary-background-color:#eaf5f8}
+.coastal-marker{display:none}
+.stApp:has(.coastal-marker) [data-testid='stMarkdownContainer']{color:#083f57}
+.stApp:has(.coastal-marker) [data-baseweb='input']{background:#fff;border-color:#c8d9e4;border-radius:12px}
+.stApp:has(.coastal-marker) .block-container{max-width:1536px;padding-top:1rem}
+.stApp:has(.coastal-marker) .brand{font-family:'Manrope',sans-serif;font-weight:800;letter-spacing:-.045em;color:#083f57}
+.stApp:has(.coastal-marker) .brand::before{content:'☀';display:inline-block;color:#e9b923;margin-right:10px;font-size:1.1em}
+.stApp:has(.coastal-marker) .brand b{color:#083f57;font-weight:800}
+.stApp:has(.coastal-marker) [data-testid='stRadio'] label p{color:#425e76}
+.stApp:has(.coastal-marker) [data-testid='stRadio'] label:has(input:checked){border-color:#e9bd25}
+.stApp:has(.coastal-marker) [data-testid='stRadio'] label:has(input:checked) p{color:#083f57}
+.stApp:has(.coastal-marker) .nav-rule{margin-bottom:0}
+.coastal-hero{position:relative;min-height:440px;background:url('app/static/art/coastal-hero.png') center 48%/cover no-repeat;border-radius:0 0 40% 6%;overflow:hidden;margin:0 -2.2rem}
+.coastal-copy{position:relative;background:#e6f5fa;max-width:49%;padding:3rem 2.6rem 4.6rem;border-radius:0 45% 25% 0;min-height:440px}
+.coastal-copy .eyebrow{color:#386d7c;font-size:.65rem;letter-spacing:.16em;margin:0 0 .8rem}
+.coastal-copy h1{font-family:'Manrope',sans-serif!important;font-size:clamp(36px,4.4vw,66px)!important;line-height:1.08!important;font-weight:800!important;letter-spacing:-.055em!important;margin:0;padding:0}
+.coastal-copy p{font-size:1.4rem;line-height:1.4;margin:1rem 0 0;color:#174f68}
+.coastal-underline{width:150px;height:7px;background:#f0c52d;border-radius:60% 30% 50% 30%;margin-top:.7rem;transform:rotate(-2deg)}
+.coastal-compact{min-height:180px;border-radius:0 0 35px 35px}
+.coastal-compact .coastal-copy{min-height:180px;padding:1.4rem 2.6rem 3rem;max-width:55%}
+.coastal-compact h1{font-size:2.3rem!important}.coastal-compact h1 br{display:none}.coastal-compact p{font-size:.95rem;margin-top:.5rem}.coastal-compact p br{display:none}.coastal-compact .eyebrow,.coastal-compact .coastal-underline{display:none}
+.st-key-travel-planner{position:relative;max-width:1080px;margin:-85px auto 0;background:#fff;border:1px solid #dde8ee;border-radius:24px;padding:1.6rem 2.6rem 2rem;box-shadow:0 14px 50px #12526d10}
+.stApp:has(.coastal-marker) .steps{margin:0 auto 1.2rem;max-width:760px;gap:0}
+.stApp:has(.coastal-marker) .step{position:relative;border:0;display:flex;align-items:center;flex-direction:column;gap:7px;padding:0;color:#687b92;font-size:.85rem}
+.stApp:has(.coastal-marker) .step::after{content:'';position:absolute;top:17px;left:calc(50% + 18px);width:calc(100% - 36px);height:2px;background:#dce4eb}
+.stApp:has(.coastal-marker) .step:last-child::after{display:none}
+.stApp:has(.coastal-marker) .step b{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;border:2px solid #d4dfe6;background:#fff;font-size:.9rem;margin:0;z-index:1}
+.stApp:has(.coastal-marker) .step.active,.stApp:has(.coastal-marker) .step.done{color:#07536b;font-weight:700}
+.stApp:has(.coastal-marker) .step.active b,.stApp:has(.coastal-marker) .step.done b{color:white;border-color:#0c6179;background:#0c6179}
+.stApp:has(.coastal-marker) .step.done::after{background:#0c6179}
+.stApp:has(.coastal-marker) .section-label{font-size:clamp(24px,2.7vw,39px);line-height:1.2;margin:.5rem 0 .2rem;color:#083f57}
+.stApp:has(.coastal-marker) .section-note{color:#61748d;margin-bottom:.5rem}
+.stApp:has(.coastal-marker) [data-testid='stVerticalBlockBorderWrapper']>div{border-color:#d7e2e9!important;border-radius:14px!important;background:#fff}
+.destination-photo{height:175px;background-image:url('app/static/art/coastal-destinations.png');background-repeat:no-repeat;background-size:300% auto;border-radius:9px;margin-bottom:15px}
+.destination-0{background-position:0% center}.destination-1{background-position:50% center}.destination-2{background-position:100% center}
+.stApp:has(.coastal-marker) .choice-title{color:#083f57;font-size:1.12rem;min-height:0;margin-bottom:6px}
+.stApp:has(.coastal-marker) .choice-description{color:#61748d;min-height:4.8em;margin-bottom:10px;font-size:.88rem;line-height:1.55}
+.stApp:has(.coastal-marker) .choice-art{height:145px;background:color-mix(in srgb,var(--tile) 40%,#eaf5f8);color:#0c6179;font-size:3rem}
+.stApp:has(.coastal-marker) [data-testid='stButton'] button,.stApp:has(.coastal-marker) [data-testid='stDownloadButton'] button,.stApp:has(.coastal-marker) [data-testid='stFormSubmitButton'] button{background:#fff;color:#0b536b;border:1px solid #c7dbe5;border-radius:12px;min-height:46px}
+.stApp:has(.coastal-marker) button[kind='primary'],.stApp:has(.coastal-marker) button[kind='primaryFormSubmit']{background:#0c6179!important;border-color:#0c6179!important;color:#fff!important}
+.stApp:has(.coastal-marker) button:hover{background:#eaf5f8;color:#06475f;border-color:#0783a3}
+.stApp:has(.coastal-marker) button[kind='primary']:hover,.stApp:has(.coastal-marker) button[kind='primaryFormSubmit']:hover{background:#084c61!important}
+.stApp:has(.coastal-marker) button:disabled{opacity:.45}
+.stApp:has(.coastal-marker) [data-testid='stForm']{max-width:none;margin-top:1rem}
+.stApp:has(.coastal-marker) [data-testid='stTextInput'] input{background:#fff;color:#083f57;border-color:#c8d9e4;border-radius:12px}
+.stApp:has(.coastal-marker) [data-testid='stTextInput'] input::placeholder{color:#718398}
+.stApp:has(.coastal-marker) [data-testid='stTextInput'] label p{color:#174f68}
+.stApp:has(.coastal-marker) [data-testid='stCaptionContainer']{color:#61748d!important}
+.stApp:has(.coastal-marker) [data-testid='stExpander']{background:#f7fbfd;border-color:#d7e2e9!important;border-radius:12px!important;color:#174f68}
+.stApp:has(.coastal-marker) [data-testid='stChatMessage']{background:#eaf5f8;color:#174f68}
+.stApp:has(.coastal-marker) .hero-facts span{background:#edf7fa;border-color:#cce4ec;color:#155b70}
+.stApp:has(.coastal-marker) .itinerary{background:#eef8fa;border-color:#bfdfe8;border-radius:16px}
+.stApp:has(.coastal-marker) .itinerary .tag{color:#0c6179}.stApp:has(.coastal-marker) .itinerary-row{border-color:#cce0e7}.stApp:has(.coastal-marker) .itinerary-row span{color:#61748d}
+.stApp:has(.coastal-marker) .footer{color:#61748d}
+.stApp:has(.coastal-marker) button:focus-visible,.stApp:has(.coastal-marker) input:focus-visible,.stApp:has(.coastal-marker) [data-testid='stRadio'] label:has(input:focus-visible){outline:3px solid #0783a3!important;outline-offset:3px}
+@media(max-width:900px){.coastal-hero{margin:0 -1.3rem;min-height:360px}.coastal-copy{min-height:360px;padding:2rem 1.6rem 4rem;max-width:55%}.coastal-copy p{font-size:1.1rem}.st-key-travel-planner{padding:1.3rem;margin-top:-55px}.destination-photo{height:140px}.coastal-compact,.coastal-compact .coastal-copy{min-height:180px}.coastal-compact .coastal-copy{max-width:65%}.stApp:has(.coastal-marker) .choice-description{font-size:.8rem}}
+@media(max-width:640px){.coastal-hero{margin:0 -1rem;min-height:380px;background-position:65% center;border-radius:0 0 25px 25px}.coastal-copy{max-width:90%;min-height:0;padding:1.5rem 1rem 1.7rem;background:#e6f5faf2;border-radius:0 0 45% 0}.coastal-copy h1{font-size:37px!important}.coastal-copy p{font-size:1rem}.coastal-copy .eyebrow{font-size:.6rem}.coastal-underline{width:110px;height:5px}.st-key-travel-planner{padding:1.1rem .8rem;margin-top:-45px;border-radius:18px}.stApp:has(.coastal-marker) .step{font-size:.7rem}.stApp:has(.coastal-marker) .step b{width:30px;height:30px}.stApp:has(.coastal-marker) .step::after{top:14px}.st-key-travel-planner [data-testid='stHorizontalBlock']:has(.destination-photo)>[data-testid='stColumn'],.st-key-travel-planner [data-testid='stHorizontalBlock']:has(.choice-art)>[data-testid='stColumn']{min-width:100%!important;flex:1 1 100%!important}.destination-photo{height:210px}.stApp:has(.coastal-marker) .choice-description{min-height:0;font-size:.9rem}.coastal-compact{min-height:190px}.coastal-compact .coastal-copy{max-width:90%;min-height:0;padding:1rem}.coastal-compact h1{font-size:27px!important}}

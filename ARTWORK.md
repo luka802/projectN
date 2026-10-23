@@ -4,6 +4,17 @@ Created with the built-in ImageGen tool from the user's selected Midnight Premie
 
 ## Saved project assets
 
+- `static/art/coastal-hero.png`: original Coastal Escape travel hero photograph.
+- `static/art/coastal-destinations.png`: three equal destination panels (Beach, Mountains, City break), displayed through CSS background positioning.
+
+### Coastal Escape prompts
+
+Hero: "Use case: photorealistic-natural. Asset type: travel website hero background. Create a wide landscape photograph, 1536x1024, Mediterranean turquoise cove with clear water, pale limestone coastal cliffs and green pine trees, small distant white sailboats, bright clear blue sky, refined editorial travel photography, natural sunlit color. Composition: coastline and strongest detail concentrated right half, open sea and sky across left for later CSS overlay. No text, UI, logos or watermarks. Realistic, inviting, serene."
+
+Destination atlas: "Use case: photorealistic-natural. Asset type: destination photographs atlas for travel planner website. One landscape image divided into exactly THREE EQUAL VERTICAL PANELS edge-to-edge, no borders or gutters. Left third: sparkling turquoise Mediterranean cove, pale sand and pines, sunny blue sky. Middle third: beautiful alpine mountains and evergreen trees reflected in a blue lake, sunny clear day. Right third: warm historic European city by a river, stone bridge and domed architecture, inviting late afternoon golden light. Each panel is an independent portrait photograph with matching professional editorial photography quality. Absolutely no lettering, captions, UI, logos, watermark, or collage overlaps. Output 1536x1024 landscape, equal thirds."
+
+### Cinema assets
+
 - `static/art/hero.png`: landscape hero background.
 - `static/art/interstellar.png`: individual space-film artwork.
 - `static/art/inception.png`: individual dream-city artwork.
