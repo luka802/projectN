@@ -57,7 +57,9 @@ Use a namespace dedicated to this dataset/model (`movies-minilm-v1` by default).
 
 ## Faster repeat searches and saved films
 
-Identical queries are cached for five minutes (up to 32 entries), with independent result copies and cache invalidation on changed ingestion. The web UI also lets you save individual films across searches in **Saved for later** and download that combined shortlist. Saved selections last for the browser session.
+Identical queries are cached for five minutes (up to 32 entries), with independent result copies and cache invalidation on changed ingestion. The web UI also lets you save individual films across searches in **Saved for later** and download that combined shortlist. The dedicated **Saved films** page offers the same shortlist and removal controls. **Download saved films** exports `saved-films.txt`; **Save these picks** exports the current search results as `my-watchlist.txt`. These lists can differ because saved films span multiple searches.
+
+Saved selections last for the Streamlit session; a browser reload or disconnection can reset them. Download your shortlist to keep it. The three initial featured films are collection picks, not search results; browsing and saving them does not initialize MiniLM or Pinecone.
 
 ## Live acceptance checklist
 

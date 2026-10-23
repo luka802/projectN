@@ -65,4 +65,13 @@ TravelBuddy: Goodbye! Safe travels and happy adventures!
 5. Type `exit` at the first and middle steps; confirm clean termination.
 6. Try an invalid API key; confirm a readable error and no lost choices.
 
-The optional web UI uses this same bot: run `python -m streamlit run web_app.py` from the repository root.
+## Website controls
+
+Run `.venv\Scripts\python -m streamlit run web_app.py` from the repository root, then select **Plan a getaway**. The Coastal Escape interface uses this same bot:
+
+- Select **Choose Beach**, **Choose Mountains**, or **Choose City break** to advance immediately, then choose a stay and an activity.
+- To use natural language, enter a preference for the current step and select **Continue**. This requires OpenRouter; exact labels and numbers are handled locally.
+- **Back a step** removes the latest choice. **Start a new trip** clears the trip and starts a fresh conversation.
+- The completed itinerary offers **Change setting**, **Change stay**, and **Change activity**. Later dependent choices are cleared when you edit an earlier step.
+- **Save your weekend plan** downloads `my-weekend-plan.txt`. It is a suggestion, not a reservation.
+- **Your conversation** shows the session history. Switching to films and back preserves the current trip; browser reloads or disconnections may start a new session.

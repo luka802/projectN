@@ -8,7 +8,7 @@ Reviewed official product pages and framework documentation on October 22, 2026.
 | [Wanderlog](https://wanderlog.com/) | Keep a trip's information organized in one itinerary | Directly edit the setting, stay, or activity from the completed itinerary; changing an earlier step clears dependent choices |
 | [JustWatch](https://www.justwatch.com/) | A unified watchlist helps retain discoveries | Keep the shortlist separate from the latest search results so a new query does not erase saved films |
 | [Streamlit caching](https://docs.streamlit.io/develop/concepts/architecture/caching) | Share expensive resources; keep personal state in Session State | Reuse the model/database client and briefly cache public search results; keep each user's saved films and itinerary in their own session |
-| [Streamlit static files](https://docs.streamlit.io/develop/concepts/configuration/serving-static-files) | Serve small supporting assets locally | Bundle the two fonts and their OFL licenses instead of requesting Google Fonts during page rendering |
+| [Streamlit static files](https://docs.streamlit.io/develop/concepts/configuration/serving-static-files) | Serve small supporting assets locally | Bundle the local fonts and their OFL licenses instead of requesting Google Fonts during page rendering |
 
 ## Measured speed
 
@@ -30,4 +30,4 @@ The query cache is bounded to 32 entries per finder, expires after five minutes,
 
 The assignment's two Python console apps and all required steps remain intact. There are no invented streaming-provider claims, live hotel availability, bookings, ratings, or maps: the supplied movie metadata and three-choice travel flow do not support those features. The interface explains its small collection and offers recovery suggestions when no movie qualifies.
 
-Fonts are the original Manrope and DM Sans files from [Google Fonts](https://github.com/google/fonts), with their unmodified OFL licenses under `static/fonts/`.
+Fonts are the original Manrope, DM Sans, and Anton files from [Google Fonts](https://github.com/google/fonts), with their unmodified OFL licenses under `static/fonts/`.

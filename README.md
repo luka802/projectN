@@ -6,7 +6,7 @@ Two Python console assignments with both optional bonuses: grounded LLM movie re
 
 ## Quick start
 
-Use Python **3.11 or 3.12**. Open a terminal in this directory:
+Use **Python 3.12**, the version verified locally and in GitHub Actions. Open a terminal in this directory:
 
 ```powershell
 python -m venv .venv
@@ -18,7 +18,7 @@ On macOS/Linux use `python3 -m venv .venv`, `.venv/bin/python`, and `cp .env.exa
 
 `requirements-lock.txt` records the exact dependency versions installed during local verification on Windows/Python 3.12. Use `pip install -r requirements-lock.txt` to reproduce that environment; `requirements.txt` keeps the supported version ranges readable.
 
-Edit `.env` locally and fill in `OPENROUTER_API_KEY` and `PINECONE_API_KEY`. Never commit this file. Create keys at [OpenRouter](https://openrouter.ai/keys) and [Pinecone](https://app.pinecone.io/). The configured Pinecone project must allow creating a serverless index. Defaults are AWS `us-east-1`, 384 dimensions, cosine metric. Check your provider account's current limits before running.
+Open `.env` in a text editor and fill in `OPENROUTER_API_KEY` and `PINECONE_API_KEY`. Never commit this file. Create keys at [OpenRouter](https://openrouter.ai/keys) and [Pinecone](https://app.pinecone.io/). The configured Pinecone project must allow creating a serverless index. Defaults are AWS `us-east-1`, 384 dimensions, cosine metric. Check your provider account's current limits before running.
 
 ```powershell
 .venv\Scripts\python -m travel_buddy
@@ -37,7 +37,8 @@ travel_buddy/      Travel chatbot, state, history, console entry point, README
 movie_finder/      Movie data, ingestion, retrieval, RAG, console entry point, README
 tests/             Offline regression tests using service doubles
 web_app.py         Optional Streamlit UI for both apps
-assets/            Shared visual styles and original SVG illustrations
+assets/            Cinema and coastal styles, plus original SVG illustrations
+static/art/        Seven original local cinema and destination images
 static/fonts/      Locally served fonts and open licenses
 .streamlit/        Theme and lightweight runtime settings
 .github/workflows/ Windows and Linux offline regression checks
@@ -55,6 +56,8 @@ Read [TravelBuddy's README](travel_buddy/README.md) and [Movie Finder's README](
 .venv\Scripts\python -m unittest discover -s tests -v
 ```
 
+For a lightweight test-only environment, install `requirements-test.txt` instead of the full requirements. `requirements.txt` is for running the apps; `requirements-lock.txt` reproduces the verified Windows environment. These dependency files are not user documents or exported itineraries.
+
 These tests do not use API keys. Separate live OpenRouter and Pinecone checks, actual retrieval scores, and UI checks are recorded in [VALIDATION.md](VALIDATION.md). The acceptance checklists in each app's README can be repeated with your configured accounts. Do not include `.env`, `.venv`, or downloaded model weights in the repository.
 
 ## Dependencies and API choices
@@ -63,20 +66,64 @@ The Pinecone SDK is constrained to version 7 to use its documented `Pinecone`, `
 
 References: [OpenRouter API](https://openrouter.ai/docs/api/reference/overview), [Pinecone Python SDK](https://github.com/pinecone-io/pinecone-python-client/tree/v7.3.0), [MiniLM model card](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2), [Streamlit](https://docs.streamlit.io/).
 
-## Interface design
+## Using the website
 
-The optional interface implements the selected **Midnight Premiere** concept: charcoal backgrounds, red actions, a cinematic space backdrop, a condensed headline, and three-column artwork-led film cards. Shared top navigation links to the travel planner, movie finder (the default page), and saved films. TravelBuddy presents three choice cards per step, instant exact selections, back/reset controls, an optional conversation panel, and a downloadable itinerary. Movie Finder provides one-click examples, persistent results across page changes, an explicit on-demand RAG action, and a downloadable watchlist. Search failures retain the previous results; new successful searches clear the old recommendation so it cannot refer to different films.
+The default page is **Find a film**. Use the top navigation to switch between all three sections:
 
-Similarity scores and implementation details live in a disclosure panel instead of competing with film descriptions. User/provider content is HTML-escaped before insertion into styled cards. Illustrations are original local SVGs with accessible descriptions. Fonts and their licenses are bundled locally, with no external font request required. Focus indicators and reduced-motion styles are included. Main text/button colour pairs were checked at a minimum 4.5:1 contrast ratio.
+| Page | What to do | What stays in this session |
+| --- | --- | --- |
+| Plan a getaway | Choose a setting, stay, and activity; or type a preference and select **Continue** | Confirmed choices and conversation history |
+| Find a film | Enter a mood, genre, or director, or choose an example; use **Help me choose** for an AI recommendation | Latest results, recommendation, and saved selections |
+| Saved films | Review your shortlist, remove films, or download it | Films saved across searches |
 
-Streamlit's source watcher is disabled to avoid scanning lazy transformer modules. After changing Python sources during development, restart the Streamlit process; normal app interactions work as usual.
+**Plan a getaway** uses the selected Coastal Escape theme: ocean blue, white panels, destination photographs, and pale choice buttons. Clicking a choice advances immediately. **Back a step** removes the latest choice. On the completed plan, **Change setting**, **Change stay**, and **Change activity** clear the edited step and any later choices. **Save your weekend plan** downloads a text itinerary; it does not book accommodation or activities.
 
-Individual film picks can be saved across searches in **Saved for later**, removed, and downloaded as one shortlist. Saved films and trip choices belong to the current browser session; download them before closing it. Completed trips support direct editing of any step, with later dependent choices cleared automatically.
+**Find a film** and **Saved films** retain the Midnight Premiere theme: charcoal, red accents, a space backdrop, and artwork-led movie cards. The initial featured collection appears without loading the model or connecting to Pinecone. A submitted search uses real MiniLM embeddings and Pinecone. **Save these picks** exports the current results; **Download saved films** exports the separate shortlist you built across searches. Search failures retain previous results. A successful new search clears the old AI recommendation.
 
-The travel planner uses a compact header after the first choice. The movie page retains the selected cinematic header and presents an initial featured collection immediately, without waiting for model startup. Featured films are labeled as collection picks; submitted searches still use MiniLM and Pinecone. The first movie search explains that opening the collection takes longer than subsequent searches.
+Trip choices and saved films are held in Streamlit Session State, not an account or permanent database. Switching pages in the app preserves them; reloading, closing, or reconnecting the browser can start a new session. Download anything you want to keep.
 
-Repeated identical movie searches are cached for up to five minutes (32 entries maximum). Cached results are copied, respect the configured threshold, and clear when ingestion updates the collection. [RESEARCH.md](RESEARCH.md) records comparable-product research and measured backend timings.
+## Configuration and service requirements
 
-GitHub Actions runs the offline tests on Windows and Linux with Python 3.12. It uses `requirements-test.txt`, which omits large model dependencies because tests inject fake providers. Live checks still require the full requirements and configured accounts.
+| Feature | Required service |
+| --- | --- |
+| Featured films, saving featured films, exact travel choices | No API request |
+| Natural-language travel preferences | OpenRouter |
+| Submitted movie searches | Pinecone and local MiniLM weights |
+| AI movie recommendations | Movie retrieval plus OpenRouter |
 
-Original artwork and the generation prompt set are documented in [ARTWORK.md](ARTWORK.md). All five images and all fonts are served locally. The six-panel genre atlas supplies artwork for films without an individual image.
+The environment template contains these defaults:
+
+| Variable | Purpose / default |
+| --- | --- |
+| `OPENROUTER_API_KEY` | Your OpenRouter key |
+| `OPENROUTER_MODEL` | Primary model: `meta-llama/llama-3-8b-instruct` |
+| `OPENROUTER_FALLBACK_MODEL` | Fallback model: `openrouter/free` |
+| `PINECONE_API_KEY` | Key for the intended Pinecone project |
+| `PINECONE_INDEX` | Index name: `movie-finder` |
+| `PINECONE_NAMESPACE` | Dataset namespace: `movies-minilm-v1` |
+| `PINECONE_CLOUD` / `PINECONE_REGION` | New-index location: `aws` / `us-east-1` |
+| `MOVIE_SIMILARITY_THRESHOLD` | Minimum cosine score: `0.30` |
+
+Model availability and account quotas can change. The client tries the configured fallback after supported provider errors, network failures, and empty or malformed primary responses. It reports a readable error if both attempts fail.
+
+## Troubleshooting
+
+| Symptom | What to check |
+| --- | --- |
+| Missing API key | Put the relevant key in the root `.env`, then restart the app |
+| OpenRouter error | Check the key, configured model IDs, connection, and account limits; retrieved films remain available if recommendation fails |
+| Pinecone dimension/metric error | Use a 384-dimensional cosine index, or choose a new `PINECONE_INDEX` |
+| First movie search is slow | Allow the initial model download and index setup to finish; later searches reuse the loaded resources |
+| No matching movies | Try a different mood, genre, or director; the collection contains 30 films and only qualifying results are shown |
+| Port 8501 is busy | Stop the previous server, or add `--server.port 8502` to the Streamlit command |
+| Code changes do not appear | Restart Streamlit; the source watcher is intentionally disabled to avoid transformer-module scanning |
+
+## Performance and design notes
+
+The Streamlit resource cache reuses the model and database client. Identical movie searches are cached for up to five minutes (32 entries maximum). Cached results are copied, respect the threshold, and clear when ingestion updates the collection. Exact travel choices skip the LLM. [RESEARCH.md](RESEARCH.md) records comparable-product research and observed backend timings.
+
+All seven raster images and all fonts are served locally. Original artwork, source paths, and generation prompts are recorded in [ARTWORK.md](ARTWORK.md). The six-panel genre atlas supplies artwork for films without an individual image. Artwork is illustrative, not an official movie poster or a claim of a bookable destination.
+
+User/provider content is HTML-escaped before insertion into styled cards. The interface includes keyboard focus indicators, reduced-motion styles, and responsive card layouts. Automated UI tests check behavior; observed live checks and the limits of visual verification are recorded in [VALIDATION.md](VALIDATION.md).
+
+GitHub Actions runs the offline tests on Windows and Linux with Python 3.12. It uses `requirements-test.txt`, which omits large model dependencies because tests inject service doubles. Live checks require the full requirements and configured accounts.
