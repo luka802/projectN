@@ -41,6 +41,10 @@
 .stApp:has(.coastal-marker) button[kind='primary'],.stApp:has(.coastal-marker) button[kind='primaryFormSubmit']{background:#0c6179!important;border-color:#0c6179!important;color:#fff!important}
 .stApp:has(.coastal-marker) button:hover{background:#eaf5f8;color:#06475f;border-color:#0783a3}
 .stApp:has(.coastal-marker) button[kind='primary']:hover,.stApp:has(.coastal-marker) button[kind='primaryFormSubmit']:hover{background:#084c61!important}
+/* Native button labels contain Markdown wrappers; inherit the button's contrast. */
+.stApp:has(.coastal-marker) button [data-testid='stMarkdownContainer'],.stApp:has(.coastal-marker) button p{color:inherit!important}
+.stApp:has(.coastal-marker) [data-testid='stButton'] button[kind='primary']{background:linear-gradient(135deg,#f5fbfd,#e8f4f8)!important;border-color:#b8d8e4!important;color:#08465d!important;box-shadow:0 1px 2px #164f6508}
+.stApp:has(.coastal-marker) [data-testid='stButton'] button[kind='primary']:hover{background:#deeff5!important;border-color:#6ca9bf!important;color:#063c51!important}
 .stApp:has(.coastal-marker) button:disabled{opacity:.45}
 .stApp:has(.coastal-marker) [data-testid='stForm']{max-width:none;margin-top:1rem}
 .stApp:has(.coastal-marker) [data-testid='stTextInput'] input{background:#fff;color:#083f57;border-color:#c8d9e4;border-radius:12px}
